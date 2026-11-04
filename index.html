@@ -72,36 +72,257 @@ svg.ch{width:100%;display:block;touch-action:none;cursor:crosshair}
 .calc b,li b,.note b{font-weight:500}
 h3.q{border-top:.5px solid var(--border);padding-top:22px;margin-top:30px}
 code{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:var(--surface-1);padding:1px 5px;border-radius:4px}
+
+.hero{padding:24px 0 8px}
+.eyebrow{font-size:13px;letter-spacing:.02em;color:#6250d6;margin:0 0 10px;font-weight:500}
+:root[data-theme="dark"] .eyebrow{color:#9085e9}
+.toc{display:flex;flex-wrap:wrap;gap:6px 8px;margin:22px 0 8px}
+.toc a{font-size:13px;text-decoration:none;color:var(--text-secondary);border:.5px solid var(--border-strong);border-radius:999px;padding:4px 12px}
+.toc a:hover{background:var(--surface-1);color:var(--text-primary)}
+section{scroll-margin-top:16px}
+h2 .num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#6250d6;color:#fff;font-size:15px;margin-right:10px;vertical-align:2px}
+h2{font-family:var(--font-serif);font-size:26px;margin-top:64px}
+figure{margin:20px 0;background:var(--surface-2);border:.5px solid var(--border);border-radius:14px;padding:18px 18px 12px}
+figure svg{width:100%;height:auto;display:block}
+@media (max-width:600px){figure{overflow-x:auto;padding:14px 12px 10px}figure svg{min-width:540px}figcaption{position:sticky;left:0;max-width:calc(100vw - 58px)}figcaption::before{content:"Desliza la imagen hacia los lados. ";font-weight:500;color:var(--text-primary)}}
+figcaption{font-size:13px;color:var(--text-secondary);margin-top:10px;line-height:1.5}
+svg .t1{font-size:15px;font-weight:500;fill:var(--text-primary)}
+svg .t2{font-size:13.5px;fill:var(--text-secondary)}
+svg .t3{font-size:12px;fill:var(--text-muted)}
+svg .win{font-size:12px;font-weight:500;fill:#6250d6}
+.dict,.missions{background:var(--surface-1);border-radius:14px;padding:16px 20px;margin:20px 0}
+.dict-t{font-weight:500;margin:0 0 8px}
+.dict dl{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 16px;margin:0;font-size:15px}
+.dict dt{font-weight:500}
+.dict dd{margin:0;color:var(--text-secondary)}
+@media (max-width:520px){.dict dl{grid-template-columns:1fr}.dict dd{margin-bottom:6px}}
+.cards3,.cards2{display:grid;gap:12px;margin:18px 0;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr))}
+.pc{background:var(--surface-2);border:.5px solid var(--border);border-radius:12px;padding:14px 16px}
+.pc p{margin:0}
+.pc-n{font-size:13px;color:var(--text-secondary)}
+.pc-v{font-family:var(--font-serif);font-size:30px;font-weight:500;font-variant-numeric:tabular-nums lining-nums;margin:2px 0 4px!important}
+.pc-s{font-size:14px;color:var(--text-secondary);line-height:1.5}
+.aside{font-size:15px;color:var(--text-secondary);border-left:3px solid #6250d6;padding-left:12px}
+.verdict{display:grid;gap:10px;margin:18px 0}
+.vi{display:flex;gap:14px;align-items:baseline;background:var(--surface-2);border:.5px solid var(--border);border-radius:12px;padding:12px 16px}
+.vk{font-weight:500;min-width:84px;color:#6250d6}
+details.qa{border:.5px solid var(--border-strong);border-radius:12px;margin:10px 0;background:var(--surface-2)}
+details.qa summary{cursor:pointer;padding:12px 16px;font-weight:500;list-style-position:inside}
+details.qa[open] summary{border-bottom:.5px solid var(--border)}
+details.qa .qb{padding:4px 16px 12px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .eyebrow,:root:not([data-theme="light"]) .vk{color:#9085e9}:root:not([data-theme="light"]) svg .win{fill:#9085e9}}
+:root[data-theme="dark"] .vk{color:#9085e9}:root[data-theme="dark"] svg .win{fill:#9085e9}
 footer{margin-top:56px;font-size:13px;color:var(--text-muted);border-top:.5px solid var(--border);padding-top:16px}
 </style>
 </head>
 <body>
 <main>
-<header>
-<h1>Centro de Procesamiento de Servicios</h1>
-<p class="lead">Optimización lineal aplicada a una decisión de capacidad: qué combinación de solicitudes atender, qué vale una hora adicional en cada etapa, si conviene una oferta de horas externas y si vale la pena pagar un costo fijo.</p>
-<p class="meta">Investigación de Operaciones Avanzada · Doctorado en Ingeniería de Procesos · Día 1 · Caso sintético con fines docentes (cifras en COP)</p>
+<header class="hero">
+<p class="eyebrow">Un caso de investigación de operaciones, explicado sin miedo a las matemáticas</p>
+<h1>¿Cuántos pedidos de cada tipo conviene atender?</h1>
+<p class="lead">Imagina que diriges un pequeño centro de ingeniería. Llegan dos tipos de pedidos, tu equipo tiene horas limitadas y quieres ganar lo máximo posible. Parece fácil: "atiendo los que más pagan". Ese es justo el error que este caso te va a ayudar a evitar.</p>
+<p class="meta">Investigación de Operaciones Avanzada · Doctorado en Ingeniería de Procesos · Día 1 · Caso sintético con fines docentes · Cifras en pesos colombianos (COP)</p>
 </header>
 
-<h2>1. El problema</h2>
-<p>El Centro hace estudios técnicos de ingeniería para clientes industriales. Atiende dos tipos de solicitud, que pasan por las mismas tres etapas: Análisis, luego Validación y por último Cierre. Cada etapa tiene un número limitado de horas-equipo al día.</p>
-<div class="tw"><table>
-<tr><th>Etapa</th><th>h-eq por Estándar</th><th>h-eq por Prioritaria</th><th>Capacidad (h-eq/día)</th></tr>
-<tr><td>Análisis</td><td>1,6</td><td>1,0</td><td>40</td></tr>
-<tr><td>Validación</td><td>2,4</td><td>1,2</td><td>48</td></tr>
-<tr><td>Cierre</td><td>0,8</td><td>1,8</td><td>36</td></tr>
-<tr><td><b>Margen por solicitud</b></td><td>$280.000</td><td>$210.000</td><td></td></tr>
-</table></div>
-<p><b style="font-weight:500">Pregunta:</b> ¿cuántas solicitudes de cada tipo atender al día para maximizar el margen sin exceder la capacidad de ninguna etapa?</p>
-<div class="note">
-<b>Modelo lineal.</b> Maximizar Z = 280.000 x₁ + 210.000 x₂, sujeto a<br>
-1,6 x₁ + 1,0 x₂ ≤ 40 (Análisis) · 2,4 x₁ + 1,2 x₂ ≤ 48 (Validación) · 0,8 x₁ + 1,8 x₂ ≤ 36 (Cierre) · x₁, x₂ ≥ 0<br>
-x₁ = solicitudes Estándar por día, x₂ = solicitudes Prioritarias por día.
+<nav class="toc" aria-label="Contenido">
+<a href="#centro">1. El Centro</a><a href="#dilema">2. El dilema</a><a href="#mezcla">3. La mezcla ganadora</a><a href="#cuello">4. El cuello de botella</a><a href="#hora">5. ¿Cuánto vale una hora?</a><a href="#oferta">6. La oferta tentadora</a><a href="#convenio">7. El interruptor</a><a href="#laboratorio">8. Laboratorio</a><a href="#decision">9. La decisión</a><a href="#cuentas">10. Las cuentas</a>
+</nav>
+
+<section id="centro">
+<h2><span class="num">1</span>Conoce el Centro</h2>
+<p>El Centro hace estudios técnicos para empresas. Cada pedido pasa por tres estaciones, siempre en el mismo orden, como en una línea de ensamblaje:</p>
+<figure>
+<svg viewBox="0 0 680 330" role="img" aria-label="Las tres estaciones del Centro y cuántas horas gasta cada tipo de pedido en cada una">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(--text-muted)"/></marker></defs>
+<g>
+<rect x="20" y="20" width="180" height="92" rx="10" style="fill:var(--surface-1);stroke:#2a78d6" stroke-width="1.5"/><rect x="20" y="20" width="180" height="8" rx="4" fill="#2a78d6"/>
+<text x="110" y="54" text-anchor="middle" class="t1">Análisis</text><text x="110" y="74" text-anchor="middle" class="t3">hace los cálculos</text><text x="110" y="98" text-anchor="middle" class="t2">40 h al día</text>
+<rect x="250" y="20" width="180" height="92" rx="10" style="fill:var(--surface-1);stroke:#eb6834" stroke-width="1.5"/><rect x="250" y="20" width="180" height="8" rx="4" fill="#eb6834"/>
+<text x="340" y="54" text-anchor="middle" class="t1">Validación</text><text x="340" y="74" text-anchor="middle" class="t3">revisa que todo esté bien</text><text x="340" y="98" text-anchor="middle" class="t2">48 h al día</text>
+<rect x="480" y="20" width="180" height="92" rx="10" style="fill:var(--surface-1);stroke:#1baf7a" stroke-width="1.5"/><rect x="480" y="20" width="180" height="8" rx="4" fill="#1baf7a"/>
+<text x="570" y="54" text-anchor="middle" class="t1">Cierre</text><text x="570" y="74" text-anchor="middle" class="t3">entrega al cliente</text><text x="570" y="98" text-anchor="middle" class="t2">36 h al día</text>
+<line x1="204" y1="66" x2="244" y2="66" style="stroke:var(--text-muted)" stroke-width="1.5" marker-end="url(#ar)"/><line x1="434" y1="66" x2="474" y2="66" style="stroke:var(--text-muted)" stroke-width="1.5" marker-end="url(#ar)"/>
+</g>
+<text x="20" y="160" class="t2">Un pedido <tspan style="fill:#6250d6;font-weight:500">Estándar</tspan> (deja $280.000) gasta:</text>
+<rect x="20" y="172" width="100" height="22" rx="4" fill="#6250d6"/><text x="128" y="188" class="t2">1,6 h</text>
+<rect x="250" y="172" width="150" height="22" rx="4" fill="#6250d6"/><text x="408" y="188" class="t2">2,4 h</text>
+<rect x="480" y="172" width="50" height="22" rx="4" fill="#6250d6"/><text x="538" y="188" class="t2">0,8 h</text>
+<text x="20" y="240" class="t2">Un pedido <tspan style="fill:#d55181;font-weight:500">Prioritario</tspan> (deja $210.000) gasta:</text>
+<rect x="20" y="252" width="62" height="22" rx="4" fill="#d55181"/><text x="90" y="268" class="t2">1,0 h</text>
+<rect x="250" y="252" width="75" height="22" rx="4" fill="#d55181"/><text x="333" y="268" class="t2">1,2 h</text>
+<rect x="480" y="252" width="112" height="22" rx="4" fill="#d55181"/><text x="600" y="268" class="t2">1,8 h</text>
+<text x="20" y="316" class="t3">El largo de cada barra es proporcional a las horas que gasta ese pedido en esa estación.</text>
+</svg>
+<figcaption>Cada estación tiene horas limitadas. Las dos clases de pedido se las reparten.</figcaption>
+</figure>
+<p>Fíjate en algo curioso: el pedido <b>Estándar</b> es "pesado" en Validación, pero ligero en Cierre. El <b>Prioritario</b> es al revés: ligero en Validación y pesado en Cierre, porque el cliente necesita más acompañamiento en la entrega.</p>
+<div class="dict">
+<p class="dict-t">Palabras que vas a encontrar</p>
+<dl>
+<dt>Variable de decisión</dt><dd>Lo que tú decides. Aquí: cuántos pedidos Estándar (<b>x₁</b>) y cuántos Prioritarios (<b>x₂</b>) atender al día.</dd>
+<dt>Restricción</dt><dd>Un límite que no puedes pasar. Aquí: las horas de cada estación.</dd>
+<dt>Margen</dt><dd>Lo que te deja cada pedido. Lo que quieres hacer lo más grande posible.</dd>
+<dt>Holgura</dt><dd>Las horas que te sobran en una estación.</dd>
+<dt>Cuello de botella</dt><dd>La estación que se llena primero y frena todo lo demás.</dd>
+<dt>Precio sombra</dt><dd>Cuánto ganarías de más si tuvieras una hora extra en una estación.</dd>
+</dl>
 </div>
+</section>
 
-<h2>2. Explora el modelo</h2>
-<p>Los cuatro gráficos están vinculados: lo que hagas en uno se refleja en los demás. Pasa el cursor (o arrastra el dedo) sobre cada gráfico, o usa los controles.</p>
+<section id="dilema">
+<h2><span class="num">2</span>El dilema: ¿cuál pedido es "mejor"?</h2>
+<p>A primera vista, el Estándar gana: deja $280.000 y el Prioritario solo $210.000. Pero las horas son el recurso escaso. La pregunta correcta no es "¿cuál paga más?", sino <b>"¿cuál paga más por cada hora que me quita?"</b>.</p>
+<figure>
+<svg viewBox="0 0 680 270" role="img" aria-label="Margen por hora de cada tipo de pedido en Validación y en Cierre">
+<line x1="40" y1="210" x2="320" y2="210" style="stroke:var(--border-strong)"/><line x1="360" y1="210" x2="640" y2="210" style="stroke:var(--border-strong)"/>
+<rect x="105" y="160" width="56" height="50" rx="4" fill="#6250d6"/><text x="133" y="150" text-anchor="middle" class="t2">$116.667</text>
+<rect x="200" y="135" width="56" height="75" rx="4" fill="#d55181"/><text x="228" y="125" text-anchor="middle" class="t2">$175.000</text><text x="228" y="105" text-anchor="middle" class="win">gana aquí</text>
+<rect x="425" y="60" width="56" height="150" rx="4" fill="#6250d6"/><text x="453" y="50" text-anchor="middle" class="t2">$350.000</text><text x="453" y="30" text-anchor="middle" class="win">gana aquí</text>
+<rect x="520" y="160" width="56" height="50" rx="4" fill="#d55181"/><text x="548" y="150" text-anchor="middle" class="t2">$116.667</text>
+<text x="180" y="234" text-anchor="middle" class="t1">En Validación</text><text x="500" y="234" text-anchor="middle" class="t1">En Cierre</text>
+<text x="180" y="254" text-anchor="middle" class="t3">280.000 ÷ 2,4 · 210.000 ÷ 1,2</text><text x="500" y="254" text-anchor="middle" class="t3">280.000 ÷ 0,8 · 210.000 ÷ 1,8</text>
+</svg>
+<figcaption>Lo que deja cada pedido por cada hora que ocupa. <span style="color:#6250d6">Morado: Estándar</span> · <span style="color:#d55181">rosado: Prioritario</span>.</figcaption>
+</figure>
+<p>¡Sorpresa! Ninguno gana en todo. En Validación rinde más el Prioritario, y en Cierre rinde más el Estándar. Es como armar un equipo de fútbol: no pones once delanteros, aunque los delanteros metan los goles. Necesitas <b>una mezcla</b> que aproveche bien cada estación.</p>
+</section>
 
+<section id="mezcla">
+<h2><span class="num">3</span>La mezcla ganadora</h2>
+<p>Ahora sí, a buscar la mejor combinación. Dibujemos todas las combinaciones posibles en un plano: el eje horizontal es cuántos Estándar atiendes y el vertical, cuántos Prioritarios. Cada estación traza una línea que no puedes cruzar. Lo que queda dentro de todas las líneas es tu <b>terreno permitido</b> (en el lenguaje técnico, la <i>región factible</i>).</p>
+<figure>
+<svg viewBox="0 0 680 310" role="img" aria-label="Región factible con sus cuatro esquinas y el margen de cada una">
+<line x1="60" y1="270" x2="380" y2="270" style="stroke:var(--text-muted)"/><line x1="60" y1="270" x2="60" y2="18" style="stroke:var(--text-muted)"/>
+<text x="220" y="298" text-anchor="middle" class="t3">pedidos Estándar al día →</text><text transform="translate(26,150) rotate(-90)" text-anchor="middle" class="t3">pedidos Prioritarios al día →</text>
+<polygon points="60,270 300,270 214,99 60,30" fill="#6250d6" fill-opacity="0.14" stroke="#6250d6" stroke-width="1.5"/>
+<line x1="300" y1="270" x2="214" y2="99" stroke="#eb6834" stroke-width="2.5" stroke-dasharray="7 4"/><line x1="214" y1="99" x2="60" y2="30" stroke="#1baf7a" stroke-width="2.5" stroke-dasharray="2 3"/>
+<text x="272" y="180" class="t3" style="fill:#eb6834">límite de Validación</text><text x="96" y="52" class="t3" style="fill:#1baf7a">límite de Cierre</text>
+<text x="150" y="200" text-anchor="middle" class="t2">terreno permitido</text>
+<circle cx="60" cy="270" r="5" style="fill:var(--text-secondary)"/><text x="68" y="262" class="t2">A</text>
+<circle cx="300" cy="270" r="5" style="fill:var(--text-secondary)"/><text x="306" y="262" class="t2">B</text>
+<circle cx="60" cy="30" r="5" style="fill:var(--text-secondary)"/><text x="70" y="26" class="t2">D</text>
+<circle cx="214" cy="99" r="9" style="fill:var(--text-primary);stroke:var(--surface-2)" stroke-width="3"/><text x="228" y="94" class="t1">C</text>
+<g transform="translate(410,40)">
+<text x="0" y="0" class="t1">Las esquinas del terreno</text>
+<text x="0" y="30" class="t2">A · nada de nada</text><text x="250" y="30" text-anchor="end" class="t2">$0</text>
+<text x="0" y="60" class="t2">B · solo 20 Estándar</text><text x="250" y="60" text-anchor="end" class="t2">$5.600.000</text>
+<text x="0" y="90" class="t2">D · solo 20 Prioritarios</text><text x="250" y="90" text-anchor="end" class="t2">$4.200.000</text>
+<rect x="-8" y="104" width="266" height="54" rx="8" fill="#6250d6" fill-opacity="0.12"/>
+<text x="0" y="126" class="t1">C · 12,86 E + 14,29 P</text><text x="250" y="126" text-anchor="end" class="t1">$6.600.000</text>
+<text x="0" y="146" class="t3">la mezcla: ¡la mejor!</text>
+<text x="0" y="190" class="t3">En un problema como este, el mejor</text><text x="0" y="207" class="t3">plan siempre está en una esquina.</text><text x="0" y="224" class="t3">Basta con revisarlas y quedarse</text><text x="0" y="241" class="t3">con la que más deja.</text>
+</g>
+</svg>
+<figcaption>Cada punto dentro del terreno es un plan posible. El mejor está en la esquina C, donde chocan los límites de Validación y de Cierre.</figcaption>
+</figure>
+<p>La esquina ganadora mezcla <b>unos 13 pedidos Estándar y unos 14 Prioritarios</b> al día y deja <b>$6.600.000</b>. Eso es $1.000.000 más que atender solo Estándar. La intuición inicial te habría costado un millón de pesos diarios.</p>
+<p class="aside">¿Y por qué 12,86 y no 13? Porque el modelo piensa en promedios diarios. Más adelante (sección 7) verás qué pasa cuando exigimos números enteros.</p>
+</section>
+
+<section id="cuello">
+<h2><span class="num">4</span>El cuello de botella</h2>
+<p>Con el plan ganador, ¿qué tan llena queda cada estación? Imagínalas como tanques de agua:</p>
+<figure>
+<svg viewBox="0 0 680 250" role="img" aria-label="Nivel de uso de cada estación en el plan óptimo: Análisis 87 por ciento, Validación y Cierre 100 por ciento">
+<g><rect x="80" y="40" width="110" height="150" rx="10" style="fill:var(--surface-1);stroke:var(--border-strong)"/><rect x="80" y="59" width="110" height="131" rx="0" fill="#2a78d6" fill-opacity="0.85"/><rect x="80" y="40" width="110" height="150" rx="10" fill="none" style="stroke:var(--border-strong)"/>
+<text x="135" y="54" text-anchor="middle" class="t3">sobran 5,1 h</text><text x="135" y="214" text-anchor="middle" class="t1">Análisis</text><text x="135" y="234" text-anchor="middle" class="t3">usa 34,9 de 40 h</text></g>
+<g><rect x="285" y="40" width="110" height="150" rx="10" fill="#eb6834" fill-opacity="0.85"/><rect x="285" y="40" width="110" height="150" rx="10" fill="none" style="stroke:var(--border-strong)"/>
+<text x="340" y="120" text-anchor="middle" class="t1" style="fill:#fff">lleno</text><text x="340" y="214" text-anchor="middle" class="t1">Validación</text><text x="340" y="234" text-anchor="middle" class="t3">usa 48 de 48 h</text></g>
+<g><rect x="490" y="40" width="110" height="150" rx="10" fill="#1baf7a" fill-opacity="0.85"/><rect x="490" y="40" width="110" height="150" rx="10" fill="none" style="stroke:var(--border-strong)"/>
+<text x="545" y="120" text-anchor="middle" class="t1" style="fill:#fff">lleno</text><text x="545" y="214" text-anchor="middle" class="t1">Cierre</text><text x="545" y="234" text-anchor="middle" class="t3">usa 36 de 36 h</text></g>
+<text x="340" y="22" text-anchor="middle" class="t2">Validación y Cierre son los cuellos de botella</text>
+</svg>
+<figcaption>Las estaciones llenas son las que frenan el plan. A Análisis le sobran horas.</figcaption>
+</figure>
+<p>Como el cuello de una botella, que decide qué tan rápido sale el agua sin importar lo ancha que sea la botella, <b>Validación y Cierre</b> deciden cuánto puedes producir. Darle más horas a Análisis no serviría de nada: ya le sobran.</p>
+</section>
+
+<section id="hora">
+<h2><span class="num">5</span>¿Cuánto vale una hora más?</h2>
+<p>Supón que pudieras conseguir una hora extra. ¿En qué estación la pondrías? El modelo responde con el <b>precio sombra</b>: lo que ganarías de más con esa hora.</p>
+<div class="cards3">
+<div class="pc" style="border-top:4px solid #2a78d6"><p class="pc-n">Análisis</p><p class="pc-v">$0</p><p class="pc-s">Ya le sobran horas. Una más no cambia nada.</p></div>
+<div class="pc" style="border-top:4px solid #eb6834"><p class="pc-n">Validación</p><p class="pc-v">$100.000</p><p class="pc-s">La hora más valiosa. Aquí conviene invertir primero.</p></div>
+<div class="pc" style="border-top:4px solid #1baf7a"><p class="pc-n">Cierre</p><p class="pc-v">$50.000</p><p class="pc-s">Vale, pero la mitad que en Validación.</p></div>
+</div>
+<p>Pero ojo: <b>ese valor no dura para siempre</b>. Si sigues agregando horas a Validación, llega un momento en que deja de ser el cuello de botella; entonces el atasco se pasa a Análisis y a Cierre. Desde ahí, una hora más de Validación vale $0. Es como ensanchar un tramo de carretera: ayuda, hasta que el trancón se muda al tramo siguiente.</p>
+<figure>
+<svg viewBox="0 0 680 250" role="img" aria-label="Valor de cada hora extra de Validación: las primeras 8 valen 100 mil pesos, la novena 31 mil y de ahí en adelante cero">
+<line x1="60" y1="190" x2="650" y2="190" style="stroke:var(--border-strong)"/>
+<g fill="#6250d6">
+<rect x="70" y="50" width="36" height="140" rx="4"/><rect x="118" y="50" width="36" height="140" rx="4"/><rect x="166" y="50" width="36" height="140" rx="4"/><rect x="214" y="50" width="36" height="140" rx="4"/><rect x="262" y="50" width="36" height="140" rx="4"/><rect x="310" y="50" width="36" height="140" rx="4"/><rect x="358" y="50" width="36" height="140" rx="4"/><rect x="406" y="50" width="36" height="140" rx="4"/><rect x="454" y="147" width="36" height="43" rx="4"/>
+</g>
+<g fill="none" style="stroke:var(--border-strong)" stroke-dasharray="3 3"><rect x="502" y="170" width="36" height="20" rx="4"/><rect x="550" y="170" width="36" height="20" rx="4"/><rect x="598" y="170" width="36" height="20" rx="4"/></g>
+<line x1="60" y1="85" x2="650" y2="85" stroke="#eda100" stroke-width="2" stroke-dasharray="6 4"/><text x="646" y="78" text-anchor="end" class="t3" style="fill:#b07700">lo que cuesta cada hora: $75.000</text>
+<text x="256" y="40" text-anchor="middle" class="t2">cada hora rinde $100.000</text><text x="568" y="160" text-anchor="middle" class="t3">después: $0</text>
+<g class="t3" text-anchor="middle"><text x="88" y="208">1</text><text x="136" y="208">2</text><text x="184" y="208">3</text><text x="232" y="208">4</text><text x="280" y="208">5</text><text x="328" y="208">6</text><text x="376" y="208">7</text><text x="424" y="208">8</text><text x="472" y="208">9</text><text x="520" y="208">10</text><text x="568" y="208">11</text><text x="616" y="208">12</text></g>
+<text x="355" y="236" text-anchor="middle" class="t3">hora extra número…</text>
+</svg>
+<figcaption>Las primeras 8,3 horas extra de Validación valen $100.000 cada una. Después, nada.</figcaption>
+</figure>
+</section>
+
+<section id="oferta">
+<h2><span class="num">6</span>La oferta tentadora</h2>
+<p>Llega un contratista y te ofrece <b>100 horas de Validación al día a $75.000 cada una</b>. Alguien hace la cuenta rápida: "si cada hora vale $100.000 y me cuesta $75.000, ¡gano $25.000 por hora! Son 100 horas: ganamos $2,5 millones". ¿Dónde está la trampa?</p>
+<figure>
+<svg viewBox="0 0 680 190" role="img" aria-label="Comparación: se pagarían 7,5 millones y solo se recibirían 0,83 millones">
+<text x="20" y="40" class="t1">Pagas</text><rect x="130" y="22" width="480" height="28" rx="4" style="fill:var(--text-muted)"/><text x="598" y="42" class="t1" text-anchor="end" style="fill:#fff">$7.500.000</text>
+<text x="20" y="92" class="t1">Recibes</text><rect x="130" y="74" width="53" height="28" rx="4" fill="#6250d6"/><text x="192" y="94" class="t1">$830.769</text>
+<text x="20" y="150" class="t1" style="fill:var(--text-danger)">Pierdes $6.669.231 cada día</text>
+<text x="20" y="174" class="t3">Solo las primeras 8,3 horas producen algo. Las otras 91,7 se pagan y no sirven.</text>
+</svg>
+<figcaption>El precio sombra solo vale dentro de su rango. Extrapolarlo a 100 horas exagera la ganancia 12 veces.</figcaption>
+</figure>
+<p>La trampa es la que viste en la sección 5: solo las primeras 8,3 horas rinden. <b>Moraleja:</b> no aceptes las 100 horas; negocia comprar <b>solo unas 8</b>. Así sí ganas: unos <b>$207.000 al día</b>.</p>
+</section>
+
+<section id="convenio">
+<h2><span class="num">7</span>El interruptor del convenio</h2>
+<p>Hay un detalle más: para atender pedidos Prioritarios hay que <b>encender un equipo especial</b> que cuesta <b>$450.000 al día</b>, sin importar si atiendes 1 o 14 pedidos. Es un interruptor: o lo enciendes o no. En el modelo esto se representa con una <i>variable binaria</i>, que solo puede valer 0 (apagado) o 1 (encendido).</p>
+<div class="cards2">
+<div class="pc"><p class="pc-n">Interruptor apagado</p><p class="pc-v">$5.600.000</p><p class="pc-s">Solo 20 pedidos Estándar.</p></div>
+<div class="pc" style="border:2px solid #6250d6"><p class="pc-n">Interruptor encendido</p><p class="pc-v">$6.130.000</p><p class="pc-s">13 Estándar + 14 Prioritarios, ya restando los $450.000.</p></div>
+</div>
+<p><b>Conviene encenderlo:</b> deja $530.000 más al día. ¿Y si el equipo saliera más caro? Seguiría conviniendo hasta un costo de <b>$980.000</b> al día, más del doble del actual:</p>
+<figure>
+<svg viewBox="0 0 680 140" role="img" aria-label="Escala de costo fijo: conviene encender hasta 980 mil pesos; hoy cuesta 450 mil">
+<rect x="60" y="50" width="379" height="26" rx="4" fill="#1baf7a" fill-opacity="0.25"/><rect x="439" y="50" width="201" height="26" rx="4" style="fill:var(--surface-1)"/>
+<text x="250" y="68" text-anchor="middle" class="t2">conviene encender</text><text x="540" y="68" text-anchor="middle" class="t3">mejor apagado</text>
+<line x1="234" y1="38" x2="234" y2="88" style="stroke:var(--text-primary)" stroke-width="2"/><text x="234" y="30" text-anchor="middle" class="t2">hoy: $450.000</text>
+<line x1="439" y1="38" x2="439" y2="88" style="stroke:var(--text-danger)" stroke-width="2"/><text x="439" y="30" text-anchor="middle" class="t2" style="fill:var(--text-danger)">límite: $980.000</text>
+<text x="60" y="108" class="t3">$0</text><text x="640" y="108" text-anchor="end" class="t3">$1.500.000</text>
+<text x="340" y="130" text-anchor="middle" class="t3">costo fijo diario del equipo del convenio</text>
+</svg>
+</figure>
+<h3>¿Por qué no basta con redondear?</h3>
+<p>Con el interruptor también exigimos números enteros: no existe "medio pedido". La tentación es redondear 12,86 → 13 y 14,29 → 14. Funciona aquí, pero no siempre; mira qué pasa con los cuatro redondeos posibles:</p>
+<figure>
+<svg viewBox="0 0 680 270" role="img" aria-label="Los cuatro redondeos del plan: dos factibles y dos que rompen un límite">
+<defs><clipPath id="clr"><rect x="110" y="30" width="320" height="200"/></clipPath></defs>
+<g clip-path="url(#clr)"><line x1="232" y1="30" x2="382" y2="230" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/><line x1="120" y1="91" x2="420" y2="180" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 3"/></g>
+<text x="388" y="222" class="t3" style="fill:#eb6834">Validación</text><text x="330" y="140" class="t3" style="fill:#1baf7a">Cierre</text>
+<g><circle cx="195" cy="180" r="9" fill="#1baf7a"/><text x="195" y="205" text-anchor="middle" class="t3">12 · 14</text>
+<circle cx="345" cy="180" r="9" fill="#1baf7a"/><text x="336" y="205" text-anchor="middle" class="t3">13 · 14</text>
+<circle cx="195" cy="80" r="9" fill="none" stroke="#e34948" stroke-width="2.5"/><line x1="189" y1="74" x2="201" y2="86" stroke="#e34948" stroke-width="2.5"/><line x1="201" y1="74" x2="189" y2="86" stroke="#e34948" stroke-width="2.5"/><text x="195" y="62" text-anchor="middle" class="t3">12 · 15</text>
+<circle cx="345" cy="80" r="9" fill="none" stroke="#e34948" stroke-width="2.5"/><line x1="339" y1="74" x2="351" y2="86" stroke="#e34948" stroke-width="2.5"/><line x1="351" y1="74" x2="339" y2="86" stroke="#e34948" stroke-width="2.5"/><text x="345" y="62" text-anchor="middle" class="t3">13 · 15</text>
+<circle cx="324" cy="151" r="6" style="fill:var(--text-primary)"/><text x="306" y="126" text-anchor="end" class="t3">plan continuo</text></g>
+<g transform="translate(460,60)">
+<text x="0" y="0" class="t2">13 · 14 → cabe · $6.580.000 ✓</text>
+<text x="0" y="28" class="t2">12 · 14 → cabe · $6.300.000</text>
+<text x="0" y="56" class="t2" style="fill:var(--text-danger)">13 · 15 → se pasa en Validación</text>
+<text x="0" y="84" class="t2" style="fill:var(--text-danger)">12 · 15 → se pasa en Cierre</text>
+<text x="0" y="124" class="t3">(Estándar · Prioritarios)</text>
+</g>
+</svg>
+<figcaption>Redondear "hacia arriba" puede romper un límite. Por eso se resuelve un modelo con números enteros, en lugar de redondear a ojo.</figcaption>
+</figure>
+<p>Exigir números enteros cuesta muy poco: <b>$20.000 al día</b> frente al plan con decimales.</p>
+</section>
+
+<section id="laboratorio">
+<h2><span class="num">8</span>Laboratorio: juega con el modelo</h2>
+<p>Ahora te toca a ti. Los cuatro gráficos están conectados: lo que hagas en uno se ve en los demás. Pasa el cursor (o arrastra el dedo en el celular) y mueve los controles.</p>
 <section class="panel" aria-label="Gráficos interactivos vinculados">
 <h2 class="sr-only">Gráficos vinculados: región factible, uso de etapas, compra de horas de Validación y costo fijo del convenio</h2>
 <div class="kpis">
@@ -135,23 +356,39 @@ x₁ = solicitudes Estándar por día, x₂ = solicitudes Prioritarias por día.
 <div class="lg"><span><svg width="22" height="8" aria-hidden="true"><line x1="0" y1="4" x2="22" y2="4" stroke="#2a78d6" stroke-width="2"/></svg>Con equipo (plan entero con Prioritarias)</span><span><svg width="22" height="8" aria-hidden="true"><line x1="0" y1="4" x2="22" y2="4" stroke="#898781" stroke-width="2" stroke-dasharray="5 3"/></svg>Sin equipo (solo Estándar)</span></div>
 <svg class="ch" id="cD" viewBox="0 0 680 220" role="img" aria-label="Margen neto con y sin equipo del convenio según el costo fijo"></svg>
 </section>
-
-<h3>Recorrido sugerido</h3>
+<div class="missions">
+<p class="dict-t">Cuatro misiones para entenderlo jugando</p>
 <ol>
-<li><b style="font-weight:500">Prueba planes en el gráfico 1.</b> Al mover el cursor por la región sombreada, el gráfico 2 muestra cuántas horas gasta ese plan en cada etapa. Fuera de la región, el plan se marca en rojo: no es factible. El punto negro es el óptimo continuo y el cuadrado morado, el plan entero.</li>
-<li><b style="font-weight:500">Compra horas en el gráfico 3.</b> La línea de Validación del gráfico 1 se desplaza y el óptimo la sigue. Hasta unas 8,3 horas, el aumento real coincide con la extrapolación; después se aplana mientras el costo sigue subiendo.</li>
-<li><b style="font-weight:500">Cambia el costo fijo en el gráfico 4.</b> Mientras la línea azul esté por encima de la gris, conviene activar el equipo del convenio. Se cruzan en $980.000.</li>
-<li><b style="font-weight:500">Mueve el margen de la Prioritaria.</b> Por debajo de $140.000 el óptimo salta a solo Estándar; por encima de $630.000, a solo Prioritarias. La línea punteada del margen gira y el óptimo es la última esquina de la región que toca.</li>
+<li><b>Busca un plan imposible.</b> En el gráfico 1, sal del terreno sombreado. El punto se pone rojo y el gráfico 2 te dice qué estación se desborda.</li>
+<li><b>Compra horas.</b> Arrastra el cursor sobre el gráfico 3. La línea naranja del gráfico 1 se mueve hacia afuera. ¿En qué momento la línea morada deja de subir?</li>
+<li><b>Encarece el equipo.</b> Arrastra sobre el gráfico 4 hasta pasar los $980.000. El cuadrado morado del gráfico 1 salta a "solo Estándar".</li>
+<li><b>Cambia lo que paga el Prioritario.</b> Bájalo de $140.000 o súbelo de $630.000 con el control. El punto negro salta de esquina.</li>
 </ol>
+</div>
+</section>
 
-<h2>3. Preguntas y respuestas, paso a paso</h2>
-<p>Esta sección sigue las preguntas del informe de decisión del notebook. En cada una se muestra de dónde sale cada número, con la cuenta completa. Entre corchetes se indica el bloque del notebook donde se calcula con Pyomo.</p>
+<section id="decision">
+<h2><span class="num">9</span>La decisión final</h2>
+<div class="verdict">
+<div class="vi"><span class="vk">Operar</span><span>13 pedidos Estándar + 14 Prioritarios al día</span></div>
+<div class="vi"><span class="vk">Encender</span><span>el equipo del convenio (deja $530.000 más al día)</span></div>
+<div class="vi"><span class="vk">Rechazar</span><span>las 100 horas del contratista (harían perder $6,7 millones al día)</span></div>
+<div class="vi"><span class="vk">Negociar</span><span>solo unas 8 horas de Validación</span></div>
+</div>
+<h3>Lo que el modelo todavía no ve</h3>
+<p>Este modelo supone que todo se sabe con exactitud: cada pedido tarda siempre lo mismo y siempre deja lo mismo. En la vida real no es así. Y como el plan deja Validación y Cierre llenas al 100 %, cualquier retraso se nota. Por eso el curso sigue con tres preguntas:</p>
+<ul>
+<li><b>Día 2 · Simulación Monte Carlo:</b> si los tiempos varían, ¿qué tan seguido nos pasamos de las horas?</li>
+<li><b>Día 3 · Estimación con MCMC:</b> ¿qué tan seguros estamos de cuánto tarda Validación, la estación más valiosa?</li>
+<li><b>Día 4 · Simulación de eventos discretos:</b> ¿qué filas y esperas se forman con estaciones tan llenas?</li>
+</ul>
+</section>
 
-<h3 class="q">P1. ¿Qué decisión enfrenta el Centro?</h3>
-<p>Decidir cuántas solicitudes Estándar y cuántas Prioritarias atender cada día para obtener el mayor margen posible. Las dos compiten por las mismas horas-equipo de tres etapas, y ninguna etapa puede trabajar más horas de las que tiene.</p>
-
-<h3 class="q">P2. ¿Cuáles son las variables y cómo se arma el modelo?</h3>
-<p>Las variables son lo que la dirección controla:</p>
+<section id="cuentas">
+<h2><span class="num">10</span>Para quien quiera ver las cuentas</h2>
+<p>Todo lo anterior sale de cuentas sencillas: sumas, multiplicaciones y, a lo sumo, resolver dos ecuaciones a la vez. Aquí están todas, paso a paso, siguiendo las preguntas del informe del notebook. Abre la que te interese. Entre corchetes va el bloque del <a href="Notebook_Dia1.ipynb">notebook</a> donde se calcula con Python (Pyomo + HiGHS).</p>
+<details class="qa"><summary>P1. ¿Qué decisión enfrenta el Centro?</summary><div class="qb"><p>Decidir cuántas solicitudes Estándar y cuántas Prioritarias atender cada día para obtener el mayor margen posible. Las dos compiten por las mismas horas-equipo de tres etapas, y ninguna etapa puede trabajar más horas de las que tiene.</p></div></details>
+<details class="qa"><summary>P2. ¿Cuáles son las variables y cómo se arma el modelo?</summary><div class="qb"><p>Las variables son lo que la dirección controla:</p>
 <ul>
 <li><b>x₁</b> = solicitudes Estándar atendidas por día (<code>m.x['Estandar']</code>).</li>
 <li><b>x₂</b> = solicitudes Prioritarias atendidas por día (<code>m.x['Prioritaria']</code>).</li>
@@ -165,10 +402,8 @@ Análisis: 1,6·x₁ + 1,0·x₂ ≤ 40<br>
 Validación: 2,4·x₁ + 1,2·x₂ ≤ 48<br>
 Cierre: 0,8·x₁ + 1,8·x₂ ≤ 36<br>
 No negatividad: x₁ ≥ 0, x₂ ≥ 0
-</div>
-
-<h3 class="q">P3. ¿Por qué la intuición de "solo Estándar" falla?</h3>
-<p>Porque lo que importa no es el margen por solicitud, sino el margen por cada hora de la etapa escasa. Dividiendo margen entre horas consumidas:</p>
+</div></div></details>
+<details class="qa"><summary>P3. ¿Por qué la intuición de "solo Estándar" falla?</summary><div class="qb"><p>Porque lo que importa no es el margen por solicitud, sino el margen por cada hora de la etapa escasa. Dividiendo margen entre horas consumidas:</p>
 <div class="calc">
 <span class="k">Por hora de Validación:</span><br>
 Estándar: 280.000 ÷ 2,4 = $116.667 por hora<br>
@@ -177,10 +412,8 @@ Prioritaria: 210.000 ÷ 1,2 = $175.000 por hora &nbsp;← rinde más<br><br>
 Estándar: 280.000 ÷ 0,8 = $350.000 por hora &nbsp;← rinde más<br>
 Prioritaria: 210.000 ÷ 1,8 = $116.667 por hora
 </div>
-<p>Cada tipo aprovecha mejor una etapa distinta. Por eso conviene mezclarlas, para llenar Validación y Cierre al mismo tiempo.</p>
-
-<h3 class="q">P4. ¿Cuál es el plan óptimo y cómo se obtiene? [Bloque 4]</h3>
-<p>En un modelo lineal con dos variables, el óptimo siempre está en una esquina (vértice) de la región factible. Basta con calcular las esquinas y comparar.</p>
+<p>Cada tipo aprovecha mejor una etapa distinta. Por eso conviene mezclarlas, para llenar Validación y Cierre al mismo tiempo.</p></div></details>
+<details class="qa"><summary>P4. ¿Cuál es el plan óptimo y cómo se obtiene? [Bloque 4]</summary><div class="qb"><p>En un modelo lineal con dos variables, el óptimo siempre está en una esquina (vértice) de la región factible. Basta con calcular las esquinas y comparar.</p>
 <div class="calc">
 <span class="k">Esquina sobre el eje x₁ (solo Estándar).</span> Cuántas Estándar caben en cada etapa si x₂ = 0:<br>
 Análisis 40 ÷ 1,6 = 25 · Validación 48 ÷ 2,4 = <b>20</b> · Cierre 36 ÷ 0,8 = 45<br>
@@ -196,28 +429,22 @@ Reemplazando (1) en (2): 0,8·(20 − 0,5·x₂) + 1,8·x₂ = 36<br>
 x₁ = 20 − 0,5 × 14,29 = <b>12,86</b><br>
 Z = 280.000 × 12,86 + 210.000 × 14,29 = 3.600.000 + 3.000.000 = <b>$6.600.000</b> &nbsp;← la mayor
 </div>
-<p>El plan óptimo es 12,86 Estándar y 14,29 Prioritarias por día, con un margen de $6.600.000 COP/día.</p>
-
-<h3 class="q">P5. ¿Cómo se comparan las posturas iniciales del caso?</h3>
-<div class="calc">
+<p>El plan óptimo es 12,86 Estándar y 14,29 Prioritarias por día, con un margen de $6.600.000 COP/día.</p></div></details>
+<details class="qa"><summary>P5. ¿Cómo se comparan las posturas iniciales del caso?</summary><div class="qb"><div class="calc">
 <span class="k">Postura A, solo Estándar:</span> calculada arriba, $5.600.000 (−15 % frente al óptimo).<br>
 <span class="k">Postura C, solo Prioritarias:</span> calculada arriba, $4.200.000 (−36 %).<br>
 <span class="k">Postura B, mezcla 50/50:</span> x₁ = x₂ = t. Cuánto cabe en cada etapa:<br>
 Análisis (1,6 + 1,0)·t ≤ 40 → t ≤ 15,38 · Validación (2,4 + 1,2)·t ≤ 48 → t ≤ <b>13,33</b> · Cierre (0,8 + 1,8)·t ≤ 36 → t ≤ 13,85<br>
 t = 13,33 → Z = (280.000 + 210.000) × 13,33 = <b>$6.533.333</b> (−1 %)
-</div>
-
-<h3 class="q">P6. ¿Qué etapas son cuellos de botella? [Bloque 4]</h3>
-<p>La holgura es la capacidad menos las horas que usa el plan óptimo:</p>
+</div></div></details>
+<details class="qa"><summary>P6. ¿Qué etapas son cuellos de botella? [Bloque 4]</summary><div class="qb"><p>La holgura es la capacidad menos las horas que usa el plan óptimo:</p>
 <div class="calc">
 Análisis: 1,6 × 12,86 + 1,0 × 14,29 = 20,57 + 14,29 = 34,86 h → holgura 40 − 34,86 = <b>5,14 h</b><br>
 Validación: 2,4 × 12,86 + 1,2 × 14,29 = 30,86 + 17,14 = 48,00 h → holgura <b>0</b><br>
 Cierre: 0,8 × 12,86 + 1,8 × 14,29 = 10,29 + 25,71 = 36,00 h → holgura <b>0</b>
 </div>
-<p>Validación y Cierre están llenas: son los cuellos de botella. A Análisis le sobran horas, así que no limita el plan.</p>
-
-<h3 class="q">P7. ¿Cuánto vale una hora adicional en cada etapa (precio sombra)? [Bloques 4 y 9]</h3>
-<p>El precio sombra de Análisis es $0, porque ya le sobran horas. Para Validación (y_V) y Cierre (y_C) se usa una condición del óptimo: el margen de cada producto debe quedar exactamente "pagado" por el valor de las horas que consume en las etapas llenas.</p>
+<p>Validación y Cierre están llenas: son los cuellos de botella. A Análisis le sobran horas, así que no limita el plan.</p></div></details>
+<details class="qa"><summary>P7. ¿Cuánto vale una hora adicional en cada etapa (precio sombra)? [Bloques 4 y 9]</summary><div class="qb"><p>El precio sombra de Análisis es $0, porque ya le sobran horas. Para Validación (y_V) y Cierre (y_C) se usa una condición del óptimo: el margen de cada producto debe quedar exactamente "pagado" por el valor de las horas que consume en las etapas llenas.</p>
 <div class="calc">
 Estándar: 2,4·y_V + 0,8·y_C = 280.000<br>
 Prioritaria: 1,2·y_V + 1,8·y_C = 210.000<br>
@@ -225,10 +452,8 @@ Multiplicando la segunda por 2: 2,4·y_V + 3,6·y_C = 420.000<br>
 Restando la primera: 2,8·y_C = 140.000 → <b>y_C = $50.000 por hora</b><br>
 Reemplazando: 2,4·y_V = 280.000 − 0,8 × 50.000 = 240.000 → <b>y_V = $100.000 por hora</b>
 </div>
-<p><b>Comprobación numérica [Bloque 9].</b> Al dar una hora más a cada etapa y volver a resolver, el margen sube exactamente $0 en Análisis, $100.000 en Validación y $50.000 en Cierre. Si hubiera que ampliar una sola etapa, convendría Validación: rinde el doble que Cierre por hora.</p>
-
-<h3 class="q">P8. ¿Hasta dónde vale ese precio sombra (rango de validez)? [Bloque 5]</h3>
-<p>El precio sombra se mantiene mientras sigan llenas las mismas etapas. Al cambiar la capacidad de una, el óptimo se desliza por la línea de la otra etapa llena, hasta chocar con algo nuevo.</p>
+<p><b>Comprobación numérica [Bloque 9].</b> Al dar una hora más a cada etapa y volver a resolver, el margen sube exactamente $0 en Análisis, $100.000 en Validación y $50.000 en Cierre. Si hubiera que ampliar una sola etapa, convendría Validación: rinde el doble que Cierre por hora.</p></div></details>
+<details class="qa"><summary>P8. ¿Hasta dónde vale ese precio sombra (rango de validez)? [Bloque 5]</summary><div class="qb"><p>El precio sombra se mantiene mientras sigan llenas las mismas etapas. Al cambiar la capacidad de una, el óptimo se desliza por la línea de la otra etapa llena, hasta chocar con algo nuevo.</p>
 <div class="calc">
 <span class="k">Validación, límite superior.</span> Al ampliar Validación, el óptimo se desliza por la línea de Cierre hasta que Análisis también se llena. Se cruzan Análisis y Cierre:<br>
 1,6·x₁ + x₂ = 40 &nbsp;y&nbsp; 0,8·x₁ + 1,8·x₂ = 36 → x₁ = 17,31; x₂ = 12,31<br>
@@ -245,10 +470,8 @@ hasta x₁ = 0 (x₂ = 40): Cierre usado 1,8 × 40 = <b>72 h</b> (límite superi
 <tr><td>Análisis</td><td>40 h</td><td>$0</td><td>34,86 h en adelante</td></tr>
 <tr><td>Validación</td><td>48 h</td><td>$100.000</td><td>24,00 a 56,31 h</td></tr>
 <tr><td>Cierre</td><td>36 h</td><td>$50.000</td><td>16,00 a 72,00 h</td></tr>
-</table></div>
-
-<h3 class="q">P9. ¿Conviene la oferta del contratista? [Bloques 6 y 10]</h3>
-<p>Un contratista ofrece 100 h de Validación por día a $75.000 cada una.</p>
+</table></div></div></details>
+<details class="qa"><summary>P9. ¿Conviene la oferta del contratista? [Bloques 6 y 10]</summary><div class="qb"><p>Un contratista ofrece 100 h de Validación por día a $75.000 cada una.</p>
 <div class="calc">
 <span class="k">Costo:</span> 100 h × $75.000 = <b>$7.500.000</b> al día<br>
 <span class="k">Extrapolación ingenua:</span> 100 h × $100.000 = $10.000.000 al día<br>
@@ -260,28 +483,22 @@ La extrapolación exagera: 10.000.000 ÷ 830.769 = <b>12 veces</b> más de lo re
 Mejor compra: <b>8,31 h</b> → neto 8,31 × 25.000 = <b>$207.692</b> al día<br>
 Pendiente promedio con +60 h [Bloque 9]: 830.769 ÷ 60 = $13.846 por hora, no $100.000
 </div>
-<p>Por eso el máximo del gráfico 3 cae justo en el límite del rango: ahí el valor de una hora más pasa de estar por encima de su costo a estar por debajo.</p>
-
-<h3 class="q">P10. ¿Cuánto cuesta el compromiso de 18 Prioritarias? [Reto A1]</h3>
-<div class="calc">
+<p>Por eso el máximo del gráfico 3 cae justo en el límite del rango: ahí el valor de una hora más pasa de estar por encima de su costo a estar por debajo.</p></div></details>
+<details class="qa"><summary>P10. ¿Cuánto cuesta el compromiso de 18 Prioritarias? [Reto A1]</summary><div class="qb"><div class="calc">
 Con x₂ = 18, la etapa que se llena es Cierre: 0,8·x₁ + 1,8 × 18 = 36 → 0,8·x₁ = 3,6 → <b>x₁ = 4,5</b><br>
 Revisión: Validación 2,4 × 4,5 + 1,2 × 18 = 32,4 ≤ 48 · Análisis 1,6 × 4,5 + 18 = 25,2 ≤ 40<br>
 Z = 280.000 × 4,5 + 210.000 × 18 = 1.260.000 + 3.780.000 = <b>$5.040.000</b><br>
 Costo del compromiso: 6.600.000 − 5.040.000 = <b>$1.560.000</b> al día
-</div>
-
-<h3 class="q">P11. ¿Cuánto puede cambiar el margen de la Prioritaria sin cambiar el plan? [Bloque 11 y Reto A2]</h3>
-<p>El óptimo se queda en la misma esquina mientras la inclinación de la línea de margen esté entre las inclinaciones de las dos etapas llenas.</p>
+</div></div></details>
+<details class="qa"><summary>P11. ¿Cuánto puede cambiar el margen de la Prioritaria sin cambiar el plan? [Bloque 11 y Reto A2]</summary><div class="qb"><p>El óptimo se queda en la misma esquina mientras la inclinación de la línea de margen esté entre las inclinaciones de las dos etapas llenas.</p>
 <div class="calc">
 Inclinación de la línea de margen: c₁ ÷ c₂ = 280.000 ÷ c₂<br>
 Inclinación de Validación: 2,4 ÷ 1,2 = 2 · Inclinación de Cierre: 0,8 ÷ 1,8 = 0,444<br>
 Condición: 0,444 ≤ 280.000 ÷ c₂ ≤ 2<br>
 → c₂ ≥ 280.000 ÷ 2 = <b>$140.000</b> &nbsp;y&nbsp; c₂ ≤ 280.000 ÷ 0,444 = <b>$630.000</b>
 </div>
-<p>Con $120.000 el plan salta a solo Estándar (20 E, $5.600.000). Con $700.000 salta a solo Prioritarias (20 P, $14.000.000). Con $300.000 la mezcla se mantiene ($7.885.714). El margen actual, $210.000, está solo $70.000 (un 33 %) por encima del límite inferior: es el dato más sensible del caso.</p>
-
-<h3 class="q">P12. ¿Conviene activar el equipo del convenio con costo fijo? [Bloques 7 y 12]</h3>
-<p>Atender Prioritarias exige un equipo que cuesta $450.000 al día. Se agrega una variable binaria y (1 = activar, 0 = no) y se exige que el plan sea entero.</p>
+<p>Con $120.000 el plan salta a solo Estándar (20 E, $5.600.000). Con $700.000 salta a solo Prioritarias (20 P, $14.000.000). Con $300.000 la mezcla se mantiene ($7.885.714). El margen actual, $210.000, está solo $70.000 (un 33 %) por encima del límite inferior: es el dato más sensible del caso.</p></div></details>
+<details class="qa"><summary>P12. ¿Conviene activar el equipo del convenio con costo fijo? [Bloques 7 y 12]</summary><div class="qb"><p>Atender Prioritarias exige un equipo que cuesta $450.000 al día. Se agrega una variable binaria y (1 = activar, 0 = no) y se exige que el plan sea entero.</p>
 <div class="calc">
 <span class="k">Vínculo x₂ ≤ M·y, con M = 20.</span> M es el máximo de Prioritarias que cabe: Cierre 36 ÷ 1,8 = 20. Si y = 0, obliga a x₂ = 0.<br>
 <span class="k">Objetivo:</span> Z = 280.000·x₁ + 210.000·x₂ − 450.000·y<br><br>
@@ -303,37 +520,30 @@ Aquí el mejor redondeo coincide con el óptimo entero, pero redondear hacia arr
 <span class="k">Ganancia de activar:</span> 6.130.000 − 5.600.000 = <b>$530.000</b> al día<br>
 <span class="k">Costo fijo crítico:</span> el equipo conviene mientras su costo sea menor que lo que aportan las Prioritarias:<br>
 6.580.000 − 5.600.000 = <b>$980.000</b> al día (más del doble del estimado de $450.000)
-</div>
-
-<h3 class="q">P13. ¿Cuándo el modelo no tiene solución? [Bloque 8]</h3>
-<div class="calc">
+</div></div></details>
+<details class="qa"><summary>P13. ¿Cuándo el modelo no tiene solución? [Bloque 8]</summary><div class="qb"><div class="calc">
 <span class="k">Infactible:</span> un contrato de al menos 30 Estándar exige 1,6 × 30 = 48 h de Análisis, pero solo hay 40. Ningún plan cumple todo.<br>
 <span class="k">No acotado:</span> si se quitan las capacidades, nada frena a x₁ ni a x₂ y el margen crece sin límite.
-</div>
-
-<h3 class="q">P14. ¿Qué supuestos sostienen el resultado?</h3>
-<ul>
+</div></div></details>
+<details class="qa"><summary>P14. ¿Qué supuestos sostienen el resultado?</summary><div class="qb"><ul>
 <li><b>Certidumbre:</b> márgenes y horas se conocen con exactitud. En la realidad, una solicitud puede tardar más un día que otro.</li>
 <li><b>Proporcionalidad:</b> 10 solicitudes gastan exactamente 10 veces lo que gasta una, sin aprendizaje ni cansancio.</li>
 <li><b>Aditividad:</b> las horas de Estándar y Prioritaria se suman sin interferencias, sin tiempo perdido al cambiar de tarea.</li>
 <li><b>Divisibilidad:</b> el modelo base admite 12,86 solicitudes; el modelo entero lo corrige.</li>
 <li><b>Demanda ilimitada:</b> cualquier combinación factible encuentra clientes.</li>
-</ul>
-
-<h3 class="q">P15. ¿Qué recomendar a la dirección?</h3>
-<div class="note">
+</ul></div></details>
+<details class="qa"><summary>P15. ¿Qué recomendar a la dirección?</summary><div class="qb"><div class="note">
 <b>Operar 13 Estándar + 14 Prioritarias al día</b> (neto $6.130.000). <b>Activar el equipo del convenio</b>: deja $530.000 más al día y aguanta un costo fijo de hasta $980.000. <b>Rechazar las 100 horas</b> del contratista, que harían perder $6.669.231 al día. <b>Negociar solo unas 8 horas</b>: con plan entero, 7,2 h permiten pasar a 17 E + 12 P.<br>
 Cuenta de esa compra: Validación 2,4 × 17 + 1,2 × 12 = 55,2 h → 55,2 − 48 = 7,2 h × $75.000 = $540.000. Margen 280.000 × 17 + 210.000 × 12 = $7.280.000 → neto 7.280.000 − 450.000 − 540.000 = <b>$6.290.000</b> (+$160.000 al día).
-</div>
-
-<h3 class="q">P16. ¿Qué no ve el modelo y cómo se abordará?</h3>
-<p>El plan deja Validación al 100 % y Cierre al 99 % (35,6 de 36 h), sin colchón. Con tiempos variables eso es riesgoso. El curso continúa así:</p>
+</div></div></details>
+<details class="qa"><summary>P16. ¿Qué no ve el modelo y cómo se abordará?</summary><div class="qb"><p>El plan deja Validación al 100 % y Cierre al 99 % (35,6 de 36 h), sin colchón. Con tiempos variables eso es riesgoso. El curso continúa así:</p>
 <ul>
 <li><b>Día 2 · Monte Carlo:</b> qué tan seguido se excede la capacidad cuando los tiempos varían.</li>
 <li><b>Día 3 · MCMC:</b> qué tan seguro se está del tiempo de Validación, el dato del cuello de botella más caro ($100.000 por hora).</li>
 <li><b>Día 4 · Eventos discretos:</b> qué colas y esperas se forman con etapas tan llenas.</li>
 </ul>
-<p>El desarrollo completo, en Python con Pyomo y HiGHS, está en el notebook <a href="Notebook_Dia1.ipynb">Notebook_Dia1.ipynb</a>.</p>
+<p>El desarrollo completo, en Python con Pyomo y HiGHS, está en el notebook <a href="Notebook_Dia1.ipynb">Notebook_Dia1.ipynb</a>.</p></div></details>
+</section>
 
 <footer>Caso sintético elaborado con fines docentes; la organización y los parámetros son ficticios. Los cálculos de esta página se hacen en el navegador, enumerando los vértices de la región factible.</footer>
 </main>
