@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Centro de Procesamiento de Servicios</title>
+<meta name="description" content="Optimización lineal del Centro de Procesamiento de Servicios: región factible, precios sombra, oferta del contratista y decisión con costo fijo, con gráficos interactivos vinculados.">
+<style>
+:root{
+  --bg:#f7f6f2;--surface-1:#efede6;--surface-2:#ffffff;
+  --text-primary:#0b0b0b;--text-secondary:#52514e;--text-muted:#898781;--text-danger:#c0392b;--text-accent:#1f5fae;
+  --border:rgba(11,11,11,.10);--border-strong:rgba(11,11,11,.20);
+  --grid:#e1e0d9;--radius:8px;
+  --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-serif:Georgia,"Times New Roman",serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121211;--surface-1:#1a1a19;--surface-2:#222221;
+    --text-primary:#f0efec;--text-secondary:#c3c2b7;--text-muted:#898781;--text-danger:#e66767;--text-accent:#7fb0ee;
+    --border:rgba(255,255,255,.10);--border-strong:rgba(255,255,255,.20);--grid:#2c2c2a;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121211;--surface-1:#1a1a19;--surface-2:#222221;
+  --text-primary:#f0efec;--text-secondary:#c3c2b7;--text-muted:#898781;--text-danger:#e66767;--text-accent:#7fb0ee;
+  --border:rgba(255,255,255,.10);--border-strong:rgba(255,255,255,.20);--grid:#2c2c2a;color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:var(--font-sans);font-size:16px;line-height:1.65}
+main{max-width:960px;margin:0 auto;padding:32px 16px 64px}
+h1{font-family:var(--font-serif);font-weight:500;font-size:clamp(24px,6vw,36px);line-height:1.2;margin:0 0 8px;overflow-wrap:break-word;hyphens:auto}
+h2{font-weight:500;font-size:22px;margin:48px 0 8px}
+h3{font-weight:500;font-size:17px;margin:24px 0 6px}
+p{margin:8px 0;max-width:72ch}
+.lead{color:var(--text-secondary);font-size:18px;max-width:68ch}
+.meta{font-size:13px;color:var(--text-muted);margin-top:12px}
+a{color:var(--text-accent)}
+table{border-collapse:collapse;font-size:14px;margin:12px 0;width:100%;max-width:680px}
+th,td{text-align:left;padding:7px 10px;border-bottom:.5px solid var(--border-strong);font-variant-numeric:tabular-nums}
+th{font-weight:500;color:var(--text-secondary)}
+.tw{overflow-x:auto}
+.note{background:var(--surface-1);border-radius:12px;padding:14px 18px;margin:16px 0;max-width:72ch}
+.note b{font-weight:500}
+ul,ol{max-width:72ch;padding-left:22px}
+li{margin:4px 0}
+.panel{background:var(--surface-2);border:.5px solid var(--border);border-radius:12px;padding:20px;margin-top:20px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:20px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:10px}
+.mc{background:var(--surface-1);border-radius:var(--radius);padding:.75rem 1rem}
+.mc .l{font-size:12px;color:var(--text-secondary)}
+.mc .v{font-size:20px;font-weight:500;font-variant-numeric:tabular-nums}
+.mc .s{font-size:12px;color:var(--text-muted)}
+.ctl{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);margin:6px 0;flex-wrap:wrap}
+.ctl span.n{min-width:170px}
+.ctl input{flex:1;min-width:140px;accent-color:#6250d6}
+.ctl b{font-weight:500;color:var(--text-primary);min-width:92px;text-align:right;font-variant-numeric:tabular-nums}
+button{font:inherit;font-size:13px;background:transparent;color:var(--text-primary);border:.5px solid var(--border-strong);border-radius:var(--radius);padding:6px 12px;cursor:pointer}
+button:hover{background:var(--surface-1)}
+.cap{font-size:14px;font-weight:500;margin:18px 0 4px}
+.lg{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--text-secondary);margin:2px 0 6px}
+.lg span{display:flex;align-items:center;gap:5px}
+svg.ch{width:100%;display:block;touch-action:none;cursor:crosshair}
+.bar{margin:12px 0}
+.bar .t{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--text-secondary);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.bar .tr{height:14px;border-radius:4px;background:var(--surface-1);border:.5px solid var(--border);overflow:hidden;margin-top:3px}
+.bar .f{height:100%;border-radius:0 4px 4px 0;transition:width .15s}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.calc{background:var(--surface-1);border-radius:12px;padding:14px 18px;margin:12px 0;max-width:760px;font-size:14.5px;line-height:1.75;font-variant-numeric:tabular-nums;overflow-x:auto}
+.calc .k{font-weight:500;color:var(--text-primary)}
+.calc b,li b,.note b{font-weight:500}
+h3.q{border-top:.5px solid var(--border);padding-top:22px;margin-top:30px}
+code{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:var(--surface-1);padding:1px 5px;border-radius:4px}
+footer{margin-top:56px;font-size:13px;color:var(--text-muted);border-top:.5px solid var(--border);padding-top:16px}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>Centro de Procesamiento de Servicios</h1>
+<p class="lead">Optimización lineal aplicada a una decisión de capacidad: qué combinación de solicitudes atender, qué vale una hora adicional en cada etapa, si conviene una oferta de horas externas y si vale la pena pagar un costo fijo.</p>
+<p class="meta">Investigación de Operaciones Avanzada · Doctorado en Ingeniería de Procesos · Día 1 · Caso sintético con fines docentes (cifras en COP)</p>
+</header>
+
+<h2>1. El problema</h2>
+<p>El Centro hace estudios técnicos de ingeniería para clientes industriales. Atiende dos tipos de solicitud, que pasan por las mismas tres etapas: Análisis, luego Validación y por último Cierre. Cada etapa tiene un número limitado de horas-equipo al día.</p>
+<div class="tw"><table>
+<tr><th>Etapa</th><th>h-eq por Estándar</th><th>h-eq por Prioritaria</th><th>Capacidad (h-eq/día)</th></tr>
+<tr><td>Análisis</td><td>1,6</td><td>1,0</td><td>40</td></tr>
+<tr><td>Validación</td><td>2,4</td><td>1,2</td><td>48</td></tr>
+<tr><td>Cierre</td><td>0,8</td><td>1,8</td><td>36</td></tr>
+<tr><td><b>Margen por solicitud</b></td><td>$280.000</td><td>$210.000</td><td></td></tr>
+</table></div>
+<p><b style="font-weight:500">Pregunta:</b> ¿cuántas solicitudes de cada tipo atender al día para maximizar el margen sin exceder la capacidad de ninguna etapa?</p>
+<div class="note">
+<b>Modelo lineal.</b> Maximizar Z = 280.000 x₁ + 210.000 x₂, sujeto a<br>
+1,6 x₁ + 1,0 x₂ ≤ 40 (Análisis) · 2,4 x₁ + 1,2 x₂ ≤ 48 (Validación) · 0,8 x₁ + 1,8 x₂ ≤ 36 (Cierre) · x₁, x₂ ≥ 0<br>
+x₁ = solicitudes Estándar por día, x₂ = solicitudes Prioritarias por día.
+</div>
+
+<h2>2. Explora el modelo</h2>
+<p>Los cuatro gráficos están vinculados: lo que hagas en uno se refleja en los demás. Pasa el cursor (o arrastra el dedo) sobre cada gráfico, o usa los controles.</p>
+
+<section class="panel" aria-label="Gráficos interactivos vinculados">
+<h2 class="sr-only">Gráficos vinculados: región factible, uso de etapas, compra de horas de Validación y costo fijo del convenio</h2>
+<div class="kpis">
+<div class="mc"><div class="l">Plan óptimo continuo</div><div class="v" id="m1">-</div><div class="s" id="m1s"></div></div>
+<div class="mc"><div class="l">Margen Z*</div><div class="v" id="m2">-</div><div class="s" id="m2s"></div></div>
+<div class="mc"><div class="l">Compra de horas de Validación</div><div class="v" id="m3">-</div><div class="s" id="m3s"></div></div>
+<div class="mc"><div class="l">Equipo del convenio</div><div class="v" id="m4">-</div><div class="s" id="m4s"></div></div>
+</div>
+<div style="margin:16px 0 6px">
+<div class="ctl"><span class="n">Margen de la Prioritaria</span><input type="range" id="sc2" min="50000" max="800000" step="10000" value="210000"><b id="oc2"></b></div>
+<div class="ctl"><span class="n">Horas extra de Validación</span><input type="range" id="sh" min="0" max="30" step="0.1" value="0"><b id="oh"></b></div>
+<div class="ctl"><span class="n">Costo fijo del convenio</span><input type="range" id="scf" min="0" max="1500000" step="10000" value="450000"><b id="ocf"></b></div>
+<div style="display:flex;justify-content:flex-end;margin-top:6px"><button id="rst">Volver al caso base</button></div>
+</div>
+<div class="g2">
+<div>
+<div class="cap">1 · Región factible (pasa el cursor para probar un plan)</div>
+<div class="lg" id="lgA"></div>
+<svg class="ch" id="cA" viewBox="0 0 340 320" role="img" aria-label="Plano de solicitudes Estándar contra Prioritarias con las tres restricciones de capacidad y el plan óptimo"></svg>
+</div>
+<div>
+<div class="cap" id="capC">2 · Uso de cada etapa en el plan óptimo</div>
+<div id="cC"></div>
+<div style="font-size:12px;color:var(--text-muted);margin-top:8px">El precio sombra es lo que se ganaría con una hora más en esa etapa, en el plan óptimo actual.</div>
+</div>
+</div>
+<div class="cap">3 · ¿Cuántas horas de Validación comprar? (arrastra o pasa el cursor)</div>
+<div class="lg"><span><svg width="22" height="8" aria-hidden="true"><line x1="0" y1="4" x2="22" y2="4" stroke="#6250d6" stroke-width="2"/></svg>Aumento real del margen</span><span><svg width="22" height="8" aria-hidden="true"><line x1="0" y1="4" x2="22" y2="4" stroke="#898781" stroke-width="2" stroke-dasharray="5 3"/></svg>Extrapolación con el precio sombra</span><span><svg width="22" height="8" aria-hidden="true"><line x1="0" y1="4" x2="22" y2="4" stroke="#eda100" stroke-width="2" stroke-dasharray="2 2"/></svg>Costo de las horas ($75.000/h)</span></div>
+<svg class="ch" id="cB" viewBox="0 0 680 250" role="img" aria-label="Aumento real del margen, extrapolación y costo según las horas extra de Validación"></svg>
+<div class="cap">4 · ¿Conviene activar el equipo del convenio? (arrastra o pasa el cursor)</div>
+<div class="lg"><span><svg width="22" height="8" aria-hidden="true"><line x1="0" y1="4" x2="22" y2="4" stroke="#2a78d6" stroke-width="2"/></svg>Con equipo (plan entero con Prioritarias)</span><span><svg width="22" height="8" aria-hidden="true"><line x1="0" y1="4" x2="22" y2="4" stroke="#898781" stroke-width="2" stroke-dasharray="5 3"/></svg>Sin equipo (solo Estándar)</span></div>
+<svg class="ch" id="cD" viewBox="0 0 680 220" role="img" aria-label="Margen neto con y sin equipo del convenio según el costo fijo"></svg>
+</section>
+
+<h3>Recorrido sugerido</h3>
+<ol>
+<li><b style="font-weight:500">Prueba planes en el gráfico 1.</b> Al mover el cursor por la región sombreada, el gráfico 2 muestra cuántas horas gasta ese plan en cada etapa. Fuera de la región, el plan se marca en rojo: no es factible. El punto negro es el óptimo continuo y el cuadrado morado, el plan entero.</li>
+<li><b style="font-weight:500">Compra horas en el gráfico 3.</b> La línea de Validación del gráfico 1 se desplaza y el óptimo la sigue. Hasta unas 8,3 horas, el aumento real coincide con la extrapolación; después se aplana mientras el costo sigue subiendo.</li>
+<li><b style="font-weight:500">Cambia el costo fijo en el gráfico 4.</b> Mientras la línea azul esté por encima de la gris, conviene activar el equipo del convenio. Se cruzan en $980.000.</li>
+<li><b style="font-weight:500">Mueve el margen de la Prioritaria.</b> Por debajo de $140.000 el óptimo salta a solo Estándar; por encima de $630.000, a solo Prioritarias. La línea punteada del margen gira y el óptimo es la última esquina de la región que toca.</li>
+</ol>
+
+<h2>3. Preguntas y respuestas, paso a paso</h2>
+<p>Esta sección sigue las preguntas del informe de decisión del notebook. En cada una se muestra de dónde sale cada número, con la cuenta completa. Entre corchetes se indica el bloque del notebook donde se calcula con Pyomo.</p>
+
+<h3 class="q">P1. ¿Qué decisión enfrenta el Centro?</h3>
+<p>Decidir cuántas solicitudes Estándar y cuántas Prioritarias atender cada día para obtener el mayor margen posible. Las dos compiten por las mismas horas-equipo de tres etapas, y ninguna etapa puede trabajar más horas de las que tiene.</p>
+
+<h3 class="q">P2. ¿Cuáles son las variables y cómo se arma el modelo?</h3>
+<p>Las variables son lo que la dirección controla:</p>
+<ul>
+<li><b>x₁</b> = solicitudes Estándar atendidas por día (<code>m.x['Estandar']</code>).</li>
+<li><b>x₂</b> = solicitudes Prioritarias atendidas por día (<code>m.x['Prioritaria']</code>).</li>
+</ul>
+<p>Son continuas y no negativas: el modelo las trata como un flujo promedio diario, por eso admite valores como 12,86. Todo lo demás (márgenes, horas por solicitud, capacidades) son parámetros: datos fijos del caso.</p>
+<div class="calc">
+<span class="k">Objetivo.</span> Cada Estándar deja $280.000 y cada Prioritaria $210.000:<br>
+Z = 280.000·x₁ + 210.000·x₂ &nbsp;→ maximizar<br><br>
+<span class="k">Una restricción por etapa.</span> Horas usadas ≤ horas disponibles. Por ejemplo, en Análisis cada Estándar gasta 1,6 h y cada Prioritaria 1,0 h:<br>
+Análisis: 1,6·x₁ + 1,0·x₂ ≤ 40<br>
+Validación: 2,4·x₁ + 1,2·x₂ ≤ 48<br>
+Cierre: 0,8·x₁ + 1,8·x₂ ≤ 36<br>
+No negatividad: x₁ ≥ 0, x₂ ≥ 0
+</div>
+
+<h3 class="q">P3. ¿Por qué la intuición de "solo Estándar" falla?</h3>
+<p>Porque lo que importa no es el margen por solicitud, sino el margen por cada hora de la etapa escasa. Dividiendo margen entre horas consumidas:</p>
+<div class="calc">
+<span class="k">Por hora de Validación:</span><br>
+Estándar: 280.000 ÷ 2,4 = $116.667 por hora<br>
+Prioritaria: 210.000 ÷ 1,2 = $175.000 por hora &nbsp;← rinde más<br><br>
+<span class="k">Por hora de Cierre:</span><br>
+Estándar: 280.000 ÷ 0,8 = $350.000 por hora &nbsp;← rinde más<br>
+Prioritaria: 210.000 ÷ 1,8 = $116.667 por hora
+</div>
+<p>Cada tipo aprovecha mejor una etapa distinta. Por eso conviene mezclarlas, para llenar Validación y Cierre al mismo tiempo.</p>
+
+<h3 class="q">P4. ¿Cuál es el plan óptimo y cómo se obtiene? [Bloque 4]</h3>
+<p>En un modelo lineal con dos variables, el óptimo siempre está en una esquina (vértice) de la región factible. Basta con calcular las esquinas y comparar.</p>
+<div class="calc">
+<span class="k">Esquina sobre el eje x₁ (solo Estándar).</span> Cuántas Estándar caben en cada etapa si x₂ = 0:<br>
+Análisis 40 ÷ 1,6 = 25 · Validación 48 ÷ 2,4 = <b>20</b> · Cierre 36 ÷ 0,8 = 45<br>
+Manda la menor: x₁ = 20 → Z = 280.000 × 20 = <b>$5.600.000</b><br><br>
+<span class="k">Esquina sobre el eje x₂ (solo Prioritarias).</span> Si x₁ = 0:<br>
+Análisis 40 ÷ 1,0 = 40 · Validación 48 ÷ 1,2 = 40 · Cierre 36 ÷ 1,8 = <b>20</b><br>
+x₂ = 20 → Z = 210.000 × 20 = <b>$4.200.000</b><br><br>
+<span class="k">Esquina donde se cruzan Validación y Cierre.</span> Se resuelven las dos ecuaciones a la vez:<br>
+(1) 2,4·x₁ + 1,2·x₂ = 48 &nbsp;→ dividiendo entre 2,4: x₁ = 20 − 0,5·x₂<br>
+(2) 0,8·x₁ + 1,8·x₂ = 36<br>
+Reemplazando (1) en (2): 0,8·(20 − 0,5·x₂) + 1,8·x₂ = 36<br>
+16 − 0,4·x₂ + 1,8·x₂ = 36 &nbsp;→ 1,4·x₂ = 20 &nbsp;→ <b>x₂ = 14,29</b><br>
+x₁ = 20 − 0,5 × 14,29 = <b>12,86</b><br>
+Z = 280.000 × 12,86 + 210.000 × 14,29 = 3.600.000 + 3.000.000 = <b>$6.600.000</b> &nbsp;← la mayor
+</div>
+<p>El plan óptimo es 12,86 Estándar y 14,29 Prioritarias por día, con un margen de $6.600.000 COP/día.</p>
+
+<h3 class="q">P5. ¿Cómo se comparan las posturas iniciales del caso?</h3>
+<div class="calc">
+<span class="k">Postura A, solo Estándar:</span> calculada arriba, $5.600.000 (−15 % frente al óptimo).<br>
+<span class="k">Postura C, solo Prioritarias:</span> calculada arriba, $4.200.000 (−36 %).<br>
+<span class="k">Postura B, mezcla 50/50:</span> x₁ = x₂ = t. Cuánto cabe en cada etapa:<br>
+Análisis (1,6 + 1,0)·t ≤ 40 → t ≤ 15,38 · Validación (2,4 + 1,2)·t ≤ 48 → t ≤ <b>13,33</b> · Cierre (0,8 + 1,8)·t ≤ 36 → t ≤ 13,85<br>
+t = 13,33 → Z = (280.000 + 210.000) × 13,33 = <b>$6.533.333</b> (−1 %)
+</div>
+
+<h3 class="q">P6. ¿Qué etapas son cuellos de botella? [Bloque 4]</h3>
+<p>La holgura es la capacidad menos las horas que usa el plan óptimo:</p>
+<div class="calc">
+Análisis: 1,6 × 12,86 + 1,0 × 14,29 = 20,57 + 14,29 = 34,86 h → holgura 40 − 34,86 = <b>5,14 h</b><br>
+Validación: 2,4 × 12,86 + 1,2 × 14,29 = 30,86 + 17,14 = 48,00 h → holgura <b>0</b><br>
+Cierre: 0,8 × 12,86 + 1,8 × 14,29 = 10,29 + 25,71 = 36,00 h → holgura <b>0</b>
+</div>
+<p>Validación y Cierre están llenas: son los cuellos de botella. A Análisis le sobran horas, así que no limita el plan.</p>
+
+<h3 class="q">P7. ¿Cuánto vale una hora adicional en cada etapa (precio sombra)? [Bloques 4 y 9]</h3>
+<p>El precio sombra de Análisis es $0, porque ya le sobran horas. Para Validación (y_V) y Cierre (y_C) se usa una condición del óptimo: el margen de cada producto debe quedar exactamente "pagado" por el valor de las horas que consume en las etapas llenas.</p>
+<div class="calc">
+Estándar: 2,4·y_V + 0,8·y_C = 280.000<br>
+Prioritaria: 1,2·y_V + 1,8·y_C = 210.000<br>
+Multiplicando la segunda por 2: 2,4·y_V + 3,6·y_C = 420.000<br>
+Restando la primera: 2,8·y_C = 140.000 → <b>y_C = $50.000 por hora</b><br>
+Reemplazando: 2,4·y_V = 280.000 − 0,8 × 50.000 = 240.000 → <b>y_V = $100.000 por hora</b>
+</div>
+<p><b>Comprobación numérica [Bloque 9].</b> Al dar una hora más a cada etapa y volver a resolver, el margen sube exactamente $0 en Análisis, $100.000 en Validación y $50.000 en Cierre. Si hubiera que ampliar una sola etapa, convendría Validación: rinde el doble que Cierre por hora.</p>
+
+<h3 class="q">P8. ¿Hasta dónde vale ese precio sombra (rango de validez)? [Bloque 5]</h3>
+<p>El precio sombra se mantiene mientras sigan llenas las mismas etapas. Al cambiar la capacidad de una, el óptimo se desliza por la línea de la otra etapa llena, hasta chocar con algo nuevo.</p>
+<div class="calc">
+<span class="k">Validación, límite superior.</span> Al ampliar Validación, el óptimo se desliza por la línea de Cierre hasta que Análisis también se llena. Se cruzan Análisis y Cierre:<br>
+1,6·x₁ + x₂ = 40 &nbsp;y&nbsp; 0,8·x₁ + 1,8·x₂ = 36 → x₁ = 17,31; x₂ = 12,31<br>
+Validación que usa ese punto: 2,4 × 17,31 + 1,2 × 12,31 = <b>56,31 h</b> → hasta unas 8,3 h extra<br><br>
+<span class="k">Validación, límite inferior.</span> Al reducir Validación, el óptimo baja por la línea de Cierre hasta x₁ = 0, donde x₂ = 20:<br>
+Validación usada: 1,2 × 20 = <b>24 h</b><br><br>
+<span class="k">Cierre.</span> El óptimo se desliza por la línea de Validación:<br>
+hasta x₂ = 0 (x₁ = 20): Cierre usado 0,8 × 20 = <b>16 h</b> (límite inferior)<br>
+hasta x₁ = 0 (x₂ = 40): Cierre usado 1,8 × 40 = <b>72 h</b> (límite superior)<br><br>
+<span class="k">Análisis.</span> Su precio sombra es $0 mientras tenga holgura: desde lo que usa hoy, <b>34,86 h</b>, sin límite superior.
+</div>
+<div class="tw"><table>
+<tr><th>Etapa</th><th>Capacidad actual</th><th>Precio sombra</th><th>Rango de validez</th></tr>
+<tr><td>Análisis</td><td>40 h</td><td>$0</td><td>34,86 h en adelante</td></tr>
+<tr><td>Validación</td><td>48 h</td><td>$100.000</td><td>24,00 a 56,31 h</td></tr>
+<tr><td>Cierre</td><td>36 h</td><td>$50.000</td><td>16,00 a 72,00 h</td></tr>
+</table></div>
+
+<h3 class="q">P9. ¿Conviene la oferta del contratista? [Bloques 6 y 10]</h3>
+<p>Un contratista ofrece 100 h de Validación por día a $75.000 cada una.</p>
+<div class="calc">
+<span class="k">Costo:</span> 100 h × $75.000 = <b>$7.500.000</b> al día<br>
+<span class="k">Extrapolación ingenua:</span> 100 h × $100.000 = $10.000.000 al día<br>
+<span class="k">Aumento real:</span> solo sirven las horas hasta 56,31 h, es decir, 56,31 − 48 = 8,31 h<br>
+8,31 h × $100.000 = <b>$830.769</b> (nuevo margen $7.430.769, plan 17,31 E + 12,31 P)<br>
+La extrapolación exagera: 10.000.000 ÷ 830.769 = <b>12 veces</b> más de lo real<br>
+<span class="k">Neto de aceptar:</span> 830.769 − 7.500.000 = <b>−$6.669.231</b> al día<br><br>
+<span class="k">¿Cuántas horas comprar entonces?</span> Mientras cada hora rinda $100.000 y cueste $75.000, cada una deja 100.000 − 75.000 = $25.000 de ganancia. Después del límite rinde $0 y sigue costando $75.000.<br>
+Mejor compra: <b>8,31 h</b> → neto 8,31 × 25.000 = <b>$207.692</b> al día<br>
+Pendiente promedio con +60 h [Bloque 9]: 830.769 ÷ 60 = $13.846 por hora, no $100.000
+</div>
+<p>Por eso el máximo del gráfico 3 cae justo en el límite del rango: ahí el valor de una hora más pasa de estar por encima de su costo a estar por debajo.</p>
+
+<h3 class="q">P10. ¿Cuánto cuesta el compromiso de 18 Prioritarias? [Reto A1]</h3>
+<div class="calc">
+Con x₂ = 18, la etapa que se llena es Cierre: 0,8·x₁ + 1,8 × 18 = 36 → 0,8·x₁ = 3,6 → <b>x₁ = 4,5</b><br>
+Revisión: Validación 2,4 × 4,5 + 1,2 × 18 = 32,4 ≤ 48 · Análisis 1,6 × 4,5 + 18 = 25,2 ≤ 40<br>
+Z = 280.000 × 4,5 + 210.000 × 18 = 1.260.000 + 3.780.000 = <b>$5.040.000</b><br>
+Costo del compromiso: 6.600.000 − 5.040.000 = <b>$1.560.000</b> al día
+</div>
+
+<h3 class="q">P11. ¿Cuánto puede cambiar el margen de la Prioritaria sin cambiar el plan? [Bloque 11 y Reto A2]</h3>
+<p>El óptimo se queda en la misma esquina mientras la inclinación de la línea de margen esté entre las inclinaciones de las dos etapas llenas.</p>
+<div class="calc">
+Inclinación de la línea de margen: c₁ ÷ c₂ = 280.000 ÷ c₂<br>
+Inclinación de Validación: 2,4 ÷ 1,2 = 2 · Inclinación de Cierre: 0,8 ÷ 1,8 = 0,444<br>
+Condición: 0,444 ≤ 280.000 ÷ c₂ ≤ 2<br>
+→ c₂ ≥ 280.000 ÷ 2 = <b>$140.000</b> &nbsp;y&nbsp; c₂ ≤ 280.000 ÷ 0,444 = <b>$630.000</b>
+</div>
+<p>Con $120.000 el plan salta a solo Estándar (20 E, $5.600.000). Con $700.000 salta a solo Prioritarias (20 P, $14.000.000). Con $300.000 la mezcla se mantiene ($7.885.714). El margen actual, $210.000, está solo $70.000 (un 33 %) por encima del límite inferior: es el dato más sensible del caso.</p>
+
+<h3 class="q">P12. ¿Conviene activar el equipo del convenio con costo fijo? [Bloques 7 y 12]</h3>
+<p>Atender Prioritarias exige un equipo que cuesta $450.000 al día. Se agrega una variable binaria y (1 = activar, 0 = no) y se exige que el plan sea entero.</p>
+<div class="calc">
+<span class="k">Vínculo x₂ ≤ M·y, con M = 20.</span> M es el máximo de Prioritarias que cabe: Cierre 36 ÷ 1,8 = 20. Si y = 0, obliga a x₂ = 0.<br>
+<span class="k">Objetivo:</span> Z = 280.000·x₁ + 210.000·x₂ − 450.000·y<br><br>
+<span class="k">A. Sin equipo (y = 0):</span> solo Estándar, x₁ = 20 → <b>$5.600.000</b><br>
+<span class="k">B. Con equipo, plan continuo:</span> 6.600.000 − 450.000 = <b>$6.150.000</b><br>
+<span class="k">C. Con equipo, plan entero (13 E + 14 P):</span><br>
+Análisis 1,6 × 13 + 14 = 34,8 ≤ 40 · Validación 2,4 × 13 + 1,2 × 14 = 48,0 ≤ 48 · Cierre 0,8 × 13 + 1,8 × 14 = 35,6 ≤ 36<br>
+Margen bruto = 280.000 × 13 + 210.000 × 14 = 3.640.000 + 2.940.000 = $6.580.000<br>
+Neto = 6.580.000 − 450.000 = <b>$6.130.000</b>
+</div>
+<div class="calc">
+<span class="k">¿Por qué no basta con redondear 12,86 y 14,29?</span> [Reto A3] De los cuatro redondeos:<br>
+(13, 14): factible → $6.580.000 &nbsp;← el mejor<br>
+(12, 14): factible → 3.360.000 + 2.940.000 = $6.300.000<br>
+(13, 15): Validación 31,2 + 18,0 = 49,2 > 48 → no factible<br>
+(12, 15): Cierre 9,6 + 27,0 = 36,6 > 36 → no factible<br>
+Aquí el mejor redondeo coincide con el óptimo entero, pero redondear hacia arriba puede romper capacidades. Por eso se resuelve un modelo entero en vez de redondear.<br><br>
+<span class="k">Costo de exigir enteros:</span> 6.150.000 − 6.130.000 = <b>$20.000</b> al día<br>
+<span class="k">Ganancia de activar:</span> 6.130.000 − 5.600.000 = <b>$530.000</b> al día<br>
+<span class="k">Costo fijo crítico:</span> el equipo conviene mientras su costo sea menor que lo que aportan las Prioritarias:<br>
+6.580.000 − 5.600.000 = <b>$980.000</b> al día (más del doble del estimado de $450.000)
+</div>
+
+<h3 class="q">P13. ¿Cuándo el modelo no tiene solución? [Bloque 8]</h3>
+<div class="calc">
+<span class="k">Infactible:</span> un contrato de al menos 30 Estándar exige 1,6 × 30 = 48 h de Análisis, pero solo hay 40. Ningún plan cumple todo.<br>
+<span class="k">No acotado:</span> si se quitan las capacidades, nada frena a x₁ ni a x₂ y el margen crece sin límite.
+</div>
+
+<h3 class="q">P14. ¿Qué supuestos sostienen el resultado?</h3>
+<ul>
+<li><b>Certidumbre:</b> márgenes y horas se conocen con exactitud. En la realidad, una solicitud puede tardar más un día que otro.</li>
+<li><b>Proporcionalidad:</b> 10 solicitudes gastan exactamente 10 veces lo que gasta una, sin aprendizaje ni cansancio.</li>
+<li><b>Aditividad:</b> las horas de Estándar y Prioritaria se suman sin interferencias, sin tiempo perdido al cambiar de tarea.</li>
+<li><b>Divisibilidad:</b> el modelo base admite 12,86 solicitudes; el modelo entero lo corrige.</li>
+<li><b>Demanda ilimitada:</b> cualquier combinación factible encuentra clientes.</li>
+</ul>
+
+<h3 class="q">P15. ¿Qué recomendar a la dirección?</h3>
+<div class="note">
+<b>Operar 13 Estándar + 14 Prioritarias al día</b> (neto $6.130.000). <b>Activar el equipo del convenio</b>: deja $530.000 más al día y aguanta un costo fijo de hasta $980.000. <b>Rechazar las 100 horas</b> del contratista, que harían perder $6.669.231 al día. <b>Negociar solo unas 8 horas</b>: con plan entero, 7,2 h permiten pasar a 17 E + 12 P.<br>
+Cuenta de esa compra: Validación 2,4 × 17 + 1,2 × 12 = 55,2 h → 55,2 − 48 = 7,2 h × $75.000 = $540.000. Margen 280.000 × 17 + 210.000 × 12 = $7.280.000 → neto 7.280.000 − 450.000 − 540.000 = <b>$6.290.000</b> (+$160.000 al día).
+</div>
+
+<h3 class="q">P16. ¿Qué no ve el modelo y cómo se abordará?</h3>
+<p>El plan deja Validación al 100 % y Cierre al 99 % (35,6 de 36 h), sin colchón. Con tiempos variables eso es riesgoso. El curso continúa así:</p>
+<ul>
+<li><b>Día 2 · Monte Carlo:</b> qué tan seguido se excede la capacidad cuando los tiempos varían.</li>
+<li><b>Día 3 · MCMC:</b> qué tan seguro se está del tiempo de Validación, el dato del cuello de botella más caro ($100.000 por hora).</li>
+<li><b>Día 4 · Eventos discretos:</b> qué colas y esperas se forman con etapas tan llenas.</li>
+</ul>
+<p>El desarrollo completo, en Python con Pyomo y HiGHS, está en el notebook <a href="Notebook_Dia1.ipynb">Notebook_Dia1.ipynb</a>.</p>
+
+<footer>Caso sintético elaborado con fines docentes; la organización y los parámetros son ficticios. Los cálculos de esta página se hacen en el navegador, enumerando los vértices de la región factible.</footer>
+</main>
+<script>
+const dk=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches};
+let COL,GRID;
+function palette(){const d=dk();COL=d?{an:'#3987e5',va:'#d95926',ci:'#199e70'}:{an:'#2a78d6',va:'#eb6834',ci:'#1baf7a'};GRID=d?'#2c2c2a':'#e1e0d9'}
+palette();
+const DASH={an:'',va:'6 4',ci:'2 3'};
+const ST=[['Análisis','an'],['Validación','va'],['Cierre','ci']];
+const A={an:[1.6,1.0],va:[2.4,1.2],ci:[0.8,1.8]};
+const C1=280000,CH=75000;
+const B0={c2:210000,h:0,cf:450000};
+let S={...B0,hov:null};
+const $=id=>document.getElementById(id);
+const fm=v=>(v<0?'-':'')+'$'+Math.round(Math.abs(v)).toLocaleString('es-CO');
+const fM=v=>(v<0?'-':'')+'$'+(Math.abs(v)/1e6).toFixed(2).replace('.',',')+' M';
+const f2=v=>v.toFixed(2).replace('.',',');
+const caps=(h,d={})=>({an:40+(d.an||0),va:48+h+(d.va||0),ci:36+(d.ci||0)});
+function clip(p,a,b,c){const o=[];for(let i=0;i<p.length;i++){const P=p[i],Q=p[(i+1)%p.length],fp=a*P[0]+b*P[1]-c,fq=a*Q[0]+b*Q[1]-c;if(fp<=1e-9)o.push(P);if((fp<-1e-9&&fq>1e-9)||(fp>1e-9&&fq<-1e-9)){const t=fp/(fp-fq);o.push([P[0]+t*(Q[0]-P[0]),P[1]+t*(Q[1]-P[1])])}}return o}
+function region(k){let p=[[0,0],[60,0],[60,60],[0,60]];for(const[,s]of ST)p=clip(p,A[s][0],A[s][1],k[s]);return p}
+function lp(c2,k){let b=null;for(const v of region(k)){const z=C1*v[0]+c2*v[1];if(!b||z>b.z+1e-6)b={x1:v[0],x2:v[1],z}}return b}
+function sombra(c2,h){const z=lp(c2,caps(h)).z,o={};for(const[,s]of ST){o[s]=(lp(c2,caps(h,{[s]:0.01})).z-z)/0.01}return o}
+function mip(c2,h){const k=caps(h);let con={z:-1},sin={z:-1};for(let a=0;a<=40;a++)for(let b=0;b<=20;b++){if(ST.some(([,s])=>A[s][0]*a+A[s][1]*b>k[s]+1e-9))continue;const z=C1*a+c2*b;if(b===0){if(z>sin.z)sin={z,x1:a,x2:0}}else if(z>con.z)con={z,x1:a,x2:b}}return{con,sin}}
+function limite(c2){const p0=sombra(c2,0).va;for(let h=0;h<=30;h+=0.01){if(Math.abs(sombra(c2,h).va-p0)>1)return h}return null}
+let LIM=null,LIMc2=null;
+function legendA(){$('lgA').innerHTML=ST.map(([n,s])=>`<span><svg width="22" height="8" aria-hidden="true"><line x1="0" y1="4" x2="22" y2="4" stroke="${COL[s]}" stroke-width="2" stroke-dasharray="${DASH[s]}"/></svg>${n}</span>`).join('')+`<span><svg width="10" height="10" aria-hidden="true"><circle cx="5" cy="5" r="4" style="fill:var(--text-primary)"/></svg>Óptimo continuo</span><span><svg width="10" height="10" aria-hidden="true"><rect x="1" y="1" width="8" height="8" fill="#6250d6"/></svg>Plan entero</span>`}
+function txt(x,y,t,o=''){return `<text x="${x}" y="${y}" style="font-size:11px;fill:var(--text-muted)" ${o}>${t}</text>`}
+function tip(x,y,lines,W,vw){const w=W,h=lines.length*15+8;let tx=x+10;if(tx+w>vw-4)tx=x-10-w;let ty=Math.max(4,y-h-6);return `<g><rect x="${tx}" y="${ty}" width="${w}" height="${h}" rx="6" style="fill:var(--surface-2);stroke:var(--border-strong)" stroke-width="0.5"/>${lines.map((l,i)=>`<text x="${tx+8}" y="${ty+17+i*15}" style="font-size:11px;fill:var(--text-${i?'secondary':'primary'})">${l}</text>`).join('')}</g>`}
+const AX={x0:40,x1:325,y0:290,y1:15,max:26};
+const ax=v=>AX.x0+v/AX.max*(AX.x1-AX.x0),ay=v=>AX.y0-v/AX.max*(AX.y0-AX.y1);
+function drawA(opt,mp){const k=caps(S.h);let s=`<defs><clipPath id="clA"><rect x="${AX.x0}" y="${AX.y1}" width="${AX.x1-AX.x0}" height="${AX.y0-AX.y1}"/></clipPath></defs>`;
+for(let v=0;v<=25;v+=5){s+=`<line x1="${ax(v)}" x2="${ax(v)}" y1="${AX.y0}" y2="${AX.y1}" stroke="${GRID}"/><line y1="${ay(v)}" y2="${ay(v)}" x1="${AX.x0}" x2="${AX.x1}" stroke="${GRID}"/>`+txt(ax(v),AX.y0+14,v,'text-anchor="middle"')+txt(AX.x0-6,ay(v)+4,v,'text-anchor="end"')}
+s+=txt((AX.x0+AX.x1)/2,AX.y0+28,'x₁ = Estándar por día','text-anchor="middle"')+`<text transform="translate(11,${(AX.y0+AX.y1)/2}) rotate(-90)" text-anchor="middle" style="font-size:11px;fill:var(--text-muted)">x₂ = Prioritarias por día</text>`;
+const pol=region(k);s+=`<g clip-path="url(#clA)"><polygon points="${pol.map(p=>ax(p[0])+','+ay(p[1])).join(' ')}" style="fill:var(--text-secondary)" fill-opacity="0.12"/>`;
+for(let a=0;a<=26;a++)for(let b=0;b<=26;b++){if(ST.some(([,q])=>A[q][0]*a+A[q][1]*b>k[q]+1e-9))continue;s+=`<circle cx="${ax(a)}" cy="${ay(b)}" r="1.4" style="fill:var(--text-muted)" opacity="0.55"/>`}
+for(const[,q]of ST){const[a,b]=A[q],c=k[q];s+=`<line x1="${ax(0)}" y1="${ay(c/b)}" x2="${ax(c/a)}" y2="${ay(0)}" stroke="${COL[q]}" stroke-width="2" stroke-dasharray="${DASH[q]}"/>`}
+const z=opt.z;s+=`<line x1="${ax(0)}" y1="${ay(z/S.c2)}" x2="${ax(z/C1)}" y2="${ay(0)}" style="stroke:var(--text-muted)" stroke-width="1" stroke-dasharray="3 3"/></g>`;
+const ip=mp.dec?mp.con:mp.sin;s+=`<rect x="${ax(ip.x1)-5}" y="${ay(ip.x2)-5}" width="10" height="10" fill="#6250d6" style="stroke:var(--surface-2)" stroke-width="2"/>`;
+s+=`<circle cx="${ax(opt.x1)}" cy="${ay(opt.x2)}" r="6" style="fill:var(--text-primary);stroke:var(--surface-2)" stroke-width="2"/>`;
+if(S.hov){const{x1,x2}=S.hov,fe=!ST.some(([,q])=>A[q][0]*x1+A[q][1]*x2>k[q]+1e-9);s+=`<circle cx="${ax(x1)}" cy="${ay(x2)}" r="5" fill="none" style="stroke:${fe?'var(--text-primary)':'#e34948'}" stroke-width="2"/>`+tip(ax(x1),ay(x2),[`${f2(x1)} E · ${f2(x2)} P`,`Margen ${fm(C1*x1+S.c2*x2)}`,fe?'Factible':'No factible: excede capacidad'],170,340)}
+else s+=tip(ax(opt.x1),ay(opt.x2),['Óptimo',`${f2(opt.x1)} E · ${f2(opt.x2)} P`],110,340);
+$('cA').innerHTML=s}
+function drawC(opt,sh){const p=S.hov||opt,k=caps(S.h);$('capC').textContent=S.hov?'2 · Uso de cada etapa en el plan bajo el cursor':'2 · Uso de cada etapa en el plan óptimo';
+$('cC').innerHTML=ST.map(([n,q])=>{const u=A[q][0]*p.x1+A[q][1]*p.x2,pc=u/k[q]*100,ex=pc>100.01;return `<div class="bar"><div class="t"><span style="color:var(--text-primary)">${n}</span><span>${f2(u)} / ${f2(k[q])} h · ${Math.round(pc)} %${ex?' · <span style="color:var(--text-danger)">excede</span>':''}</span></div><div class="tr"><div class="f" style="width:${Math.min(pc,100)}%;background:${ex?'#e34948':COL[q]}"></div></div><div class="t" style="margin-top:3px"><span>${pc>99.9&&!ex?'Cuello de botella':'Con holgura de '+f2(Math.max(k[q]-u,0))+' h'}</span><span>Precio sombra ${fm(sh[q])}/h</span></div></div>`}).join('')}
+const BX={x0:60,x1:665,y0:215,y1:15};
+function drawB(c2){const z0=lp(c2,caps(0)).z,p0=sombra(c2,0).va;const H=[];for(let i=0;i<=300;i++)H.push(i/10);const R=H.map(h=>lp(c2,caps(h)).z-z0);
+const ymax=Math.max(p0*30,CH*30,...R)*1.08,bx=h=>BX.x0+h/30*(BX.x1-BX.x0),by=v=>BX.y0-v/ymax*(BX.y0-BX.y1);
+let s='';const st=ymax>4e6?1e6:5e5;for(let v=0;v<=ymax;v+=st){s+=`<line x1="${BX.x0}" x2="${BX.x1}" y1="${by(v)}" y2="${by(v)}" stroke="${GRID}"/>`+txt(BX.x0-6,by(v)+4,fM(v).replace(',00',''),'text-anchor="end"')}
+for(let h=0;h<=30;h+=5)s+=txt(bx(h),BX.y0+15,h+' h','text-anchor="middle"');
+if(LIM!==null)s+=`<line x1="${bx(LIM)}" x2="${bx(LIM)}" y1="${BX.y0}" y2="${BX.y1}" style="stroke:var(--text-muted)" stroke-dasharray="2 3"/>`+txt(bx(LIM)+5,BX.y1+12,'fin del rango de validez: '+f2(LIM)+' h');
+s+=`<polyline points="${H.map(h=>bx(h)+','+by(CH*h)).join(' ')}" fill="none" stroke="#eda100" stroke-width="2" stroke-dasharray="2 2"/><polyline points="${H.map(h=>bx(h)+','+by(p0*h)).join(' ')}" fill="none" stroke="#898781" stroke-width="2" stroke-dasharray="5 3"/><polyline points="${H.map((h,i)=>bx(h)+','+by(R[i])).join(' ')}" fill="none" stroke="#6250d6" stroke-width="2" stroke-linejoin="round"/>`;
+const h=S.h,ri=lp(c2,caps(h)).z-z0;s+=`<line x1="${bx(h)}" x2="${bx(h)}" y1="${BX.y0}" y2="${BX.y1}" style="stroke:var(--text-secondary)" stroke-width="1"/><circle cx="${bx(h)}" cy="${by(ri)}" r="5" fill="#6250d6" style="stroke:var(--surface-2)" stroke-width="2"/><circle cx="${bx(h)}" cy="${by(CH*h)}" r="4" fill="#eda100" style="stroke:var(--surface-2)" stroke-width="2"/>`;
+s+=tip(bx(h),by(Math.max(ri,CH*h)),[`${f2(h)} h extra`,`Aumento real ${fm(ri)}`,`Extrapolado ${fm(p0*h)}`,`Costo ${fm(CH*h)}`,`Neto ${fm(ri-CH*h)}`],150,680);
+$('cB').innerHTML=s;return ri-CH*h}
+const DX={x0:60,x1:665,y0:185,y1:15};
+function drawD(mp){const cmax=1500000,con=cf=>mp.con.z-cf,sin=mp.sin.z;const lo=Math.min(sin,con(cmax))*0.97,hi=Math.max(sin,con(0))*1.01,dx=c=>DX.x0+c/cmax*(DX.x1-DX.x0),dy=v=>DX.y0-(v-lo)/(hi-lo)*(DX.y0-DX.y1);
+let s='';const st=5e5;for(let v=Math.ceil(lo/st)*st;v<=hi;v+=st)s+=`<line x1="${DX.x0}" x2="${DX.x1}" y1="${dy(v)}" y2="${dy(v)}" stroke="${GRID}"/>`+txt(DX.x0-6,dy(v)+4,fM(v).replace(',00',''),'text-anchor="end"');
+for(let c=0;c<=cmax;c+=250000)s+=txt(dx(c),DX.y0+15,fM(c).replace(',00',''),'text-anchor="middle"');
+const cr=mp.con.z-sin;if(cr>0&&cr<cmax)s+=`<line x1="${dx(cr)}" x2="${dx(cr)}" y1="${DX.y0}" y2="${DX.y1}" style="stroke:var(--text-muted)" stroke-dasharray="2 3"/>`+txt(dx(cr)+5,DX.y1+12,'costo crítico '+fm(cr));
+s+=`<line x1="${dx(0)}" y1="${dy(sin)}" x2="${dx(cmax)}" y2="${dy(sin)}" stroke="#898781" stroke-width="2" stroke-dasharray="5 3"/><line x1="${dx(0)}" y1="${dy(con(0))}" x2="${dx(cmax)}" y2="${dy(con(cmax))}" stroke="#2a78d6" stroke-width="2"/>`;
+const c=S.cf;s+=`<line x1="${dx(c)}" x2="${dx(c)}" y1="${DX.y0}" y2="${DX.y1}" style="stroke:var(--text-secondary)"/><circle cx="${dx(c)}" cy="${dy(con(c))}" r="5" fill="#2a78d6" style="stroke:var(--surface-2)" stroke-width="2"/><circle cx="${dx(c)}" cy="${dy(sin)}" r="4" fill="#898781" style="stroke:var(--surface-2)" stroke-width="2"/>`;
+s+=tip(dx(c),dy(Math.max(con(c),sin)),[`Costo fijo ${fm(c)}`,`Con equipo ${fm(con(c))} (${mp.con.x1} E + ${mp.con.x2} P)`,`Sin equipo ${fm(sin)} (${mp.sin.x1} E)`,con(c)>sin?'Conviene activar':'No conviene activar'],230,680);
+$('cD').innerHTML=s}
+function render(){if(LIMc2!==S.c2){LIM=limite(S.c2);LIMc2=S.c2}
+const k=caps(S.h),opt=lp(S.c2,k),sh=sombra(S.c2,S.h),mp=mip(S.c2,S.h);mp.dec=mp.con.z-S.cf>mp.sin.z;
+$('oc2').textContent=fm(S.c2);$('oh').textContent=f2(S.h)+' h';$('ocf').textContent=fm(S.cf);$('sc2').value=S.c2;$('sh').value=S.h;$('scf').value=S.cf;
+drawA(opt,mp);drawC(opt,sh);const neto=drawB(S.c2);drawD(mp);
+$('m1').textContent=`${f2(opt.x1)} E · ${f2(opt.x2)} P`;$('m1s').textContent='Punto negro del gráfico 1';
+$('m2').textContent=fm(opt.z);$('m2s').textContent=S.h>0?`Incluye ${f2(S.h)} h extra (antes de pagarlas)`:'Margen diario sin costo fijo';
+$('m3').textContent=fm(neto);$('m3s').textContent=`Neto de comprar ${f2(S.h)} h a $75.000`;
+const ip=mp.dec?mp.con:mp.sin;$('m4').textContent=mp.dec?'Activar':'No activar';$('m4s').textContent=`Plan entero ${ip.x1} E + ${ip.x2} P · neto ${fm(mp.dec?mp.con.z-S.cf:mp.sin.z)}`}
+function pt(svg,e,vw,vh){const r=svg.getBoundingClientRect();return[(e.clientX-r.left)/r.width*vw,(e.clientY-r.top)/r.height*vh]}
+$('cA').addEventListener('pointermove',e=>{const[x,y]=pt($('cA'),e,340,320);const x1=(x-AX.x0)/(AX.x1-AX.x0)*AX.max,x2=(AX.y0-y)/(AX.y0-AX.y1)*AX.max;S.hov=(x1<0||x2<0||x1>AX.max||x2>AX.max)?null:{x1:Math.round(x1*4)/4,x2:Math.round(x2*4)/4};render()});
+$('cA').addEventListener('pointerleave',()=>{S.hov=null;render()});
+$('cB').addEventListener('pointermove',e=>{const[x]=pt($('cB'),e,680,250);S.h=Math.round(Math.min(30,Math.max(0,(x-BX.x0)/(BX.x1-BX.x0)*30))*10)/10;render()});
+$('cD').addEventListener('pointermove',e=>{const[x]=pt($('cD'),e,680,220);S.cf=Math.round(Math.min(1500000,Math.max(0,(x-DX.x0)/(DX.x1-DX.x0)*1500000))/10000)*10000;render()});
+$('sc2').addEventListener('input',e=>{S.c2=+e.target.value;render()});
+$('sh').addEventListener('input',e=>{S.h=+e.target.value;render()});
+$('scf').addEventListener('input',e=>{S.cf=+e.target.value;render()});
+$('rst').addEventListener('click',()=>{S={...B0,hov:null};render()});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{palette();legendA();render()});
+legendA();render();
+</script>
+</body>
+</html>

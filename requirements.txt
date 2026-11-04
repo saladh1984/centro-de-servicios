@@ -1,0 +1,4 @@
+pyomo>=6.7
+highspy>=1.7
+numpy>=1.26
+matplotlib>=3.8
