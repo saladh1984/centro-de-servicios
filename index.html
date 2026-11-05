@@ -116,6 +116,31 @@ details.qa .qb{padding:4px 16px 12px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .eyebrow,:root:not([data-theme="light"]) .vk{color:#9085e9}:root:not([data-theme="light"]) svg .win{fill:#9085e9}}
 :root[data-theme="dark"] .vk{color:#9085e9}:root[data-theme="dark"] svg .win{fill:#9085e9}
 .eq-tests li{margin:8px 0}
+.sim{background:var(--surface-2);border:.5px solid var(--border);border-radius:14px;padding:18px;margin:16px 0}
+.sim-seg{display:inline-flex;border:.5px solid var(--border-strong);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.sim-seg button{border:0;border-radius:0;padding:8px 16px;font-size:14px}
+.sim-seg button+button{border-left:.5px solid var(--border-strong)}
+.sim-seg button.on,.sim-btns button.on{background:color-mix(in srgb,#6250d6 12%,transparent);color:var(--text-primary)}
+.sim-btns button.on{border-color:#6250d6}
+.sim-btns{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+.sim-btns button{font-size:13.5px;padding:7px 12px}
+.sim-sl{display:grid;grid-template-columns:minmax(170px,230px) 1fr 104px;align-items:center;gap:12px;margin:6px 0;font-size:15px;color:var(--text-secondary)}
+.sim-sl b{font-weight:500;color:var(--text-primary);text-align:right;font-variant-numeric:tabular-nums}
+.sim-sl span b{text-align:left}
+.sim-sl input{width:100%;accent-color:#6250d6}
+@media (max-width:520px){.sim-sl{grid-template-columns:1fr 96px}.sim-sl>span{grid-column:1/-1;margin-bottom:-6px}}
+.sim-svg{width:100%;height:auto;display:block;margin:10px 0 4px;touch-action:pan-y}
+.sim-cap{font-size:13px;color:var(--text-muted);margin:0 0 10px}
+.sim-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:10px;margin:10px 0}
+.mc2{background:var(--surface-1);border-radius:10px;padding:10px 14px}
+.mc2 .l{font-size:12px;color:var(--text-secondary)}
+.mc2 .v{font-size:19px;font-weight:500;font-variant-numeric:tabular-nums}
+.mc2 .s{font-size:12px;color:var(--text-muted)}
+.wi{border-left:3px solid #6250d6;padding:4px 0 4px 14px;margin-top:14px}
+.wi-t{font-weight:500;margin:0 0 4px}
+.wi ul{margin:0;padding-left:18px}
+.wi li{margin:6px 0;font-size:15px;color:var(--text-secondary)}
+.wi li b{color:var(--text-primary)}
 footer{margin-top:56px;font-size:13px;color:var(--text-muted);border-top:.5px solid var(--border);padding-top:16px}
 </style>
 </head>
@@ -527,62 +552,242 @@ render();
 
 <section id="hora">
 <h2><span class="num">5</span>¿Cuánto vale una hora más?</h2>
-<p>Supón que pudieras conseguir una hora extra. ¿En qué estación la pondrías? El modelo responde con el <b>precio sombra</b>: lo que ganarías de más con esa hora.</p>
-<div class="cards3">
-<div class="pc" style="border-top:4px solid #2a78d6"><p class="pc-n">Análisis</p><p class="pc-v">$0</p><p class="pc-s">Ya le sobran horas. Una más no cambia nada.</p></div>
-<div class="pc" style="border-top:4px solid #eb6834"><p class="pc-n">Validación</p><p class="pc-v">$100.000</p><p class="pc-s">La hora más valiosa. Aquí conviene invertir primero.</p></div>
-<div class="pc" style="border-top:4px solid #1baf7a"><p class="pc-n">Cierre</p><p class="pc-v">$50.000</p><p class="pc-s">Vale, pero la mitad que en Validación.</p></div>
+<p>Supón que pudieras conseguir una hora extra de trabajo. ¿En qué estación la pondrías? La respuesta tiene nombre: el <b>precio sombra</b>, que es lo que ganarías de más con esa hora. No es un dato que alguien nos dé: lo calculamos con el modelo.</p>
+<div class="dict">
+<p class="dict-t">Los datos que usamos</p>
+<dl>
+<dt>Horas disponibles</dt><dd>Análisis 40 h, Validación 48 h y Cierre 36 h al día.</dd>
+<dt>Horas por pedido</dt><dd>Estándar: 1,6 / 2,4 / 0,8 h. Prioritario: 1,0 / 1,2 / 1,8 h (en Análisis / Validación / Cierre).</dd>
+<dt>Margen por pedido</dt><dd>Estándar $280.000 · Prioritario $210.000.</dd>
+<dt>Punto de partida</dt><dd>El mejor plan: 12,86 Estándar + 14,29 Prioritarios, con margen Z = $6.600.000. Validación y Cierre están llenas; a Análisis le sobran 5,14 h.</dd>
+</dl>
 </div>
-<p>Pero ojo: <b>ese valor no dura para siempre</b>. Si sigues agregando horas a Validación, llega un momento en que deja de ser el cuello de botella; entonces el atasco se pasa a Análisis y a Cierre. Desde ahí, una hora más de Validación vale $0. Es como ensanchar un tramo de carretera: ayuda, hasta que el trancón se muda al tramo siguiente.</p>
-<figure>
-<svg viewBox="0 0 680 250" role="img" aria-label="Valor de cada hora extra de Validación: las primeras 8 valen 100 mil pesos, la novena 31 mil y de ahí en adelante cero">
-<line x1="60" y1="190" x2="650" y2="190" style="stroke:var(--border-strong)"/>
-<g fill="#6250d6">
-<rect x="70" y="50" width="36" height="140" rx="4"/><rect x="118" y="50" width="36" height="140" rx="4"/><rect x="166" y="50" width="36" height="140" rx="4"/><rect x="214" y="50" width="36" height="140" rx="4"/><rect x="262" y="50" width="36" height="140" rx="4"/><rect x="310" y="50" width="36" height="140" rx="4"/><rect x="358" y="50" width="36" height="140" rx="4"/><rect x="406" y="50" width="36" height="140" rx="4"/><rect x="454" y="147" width="36" height="43" rx="4"/>
-</g>
-<g fill="none" style="stroke:var(--border-strong)" stroke-dasharray="3 3"><rect x="502" y="170" width="36" height="20" rx="4"/><rect x="550" y="170" width="36" height="20" rx="4"/><rect x="598" y="170" width="36" height="20" rx="4"/></g>
-<line x1="60" y1="85" x2="650" y2="85" stroke="#eda100" stroke-width="2" stroke-dasharray="6 4"/><text x="646" y="78" text-anchor="end" class="t3" style="fill:#b07700">lo que cuesta cada hora: $75.000</text>
-<text x="256" y="40" text-anchor="middle" class="t2">cada hora rinde $100.000</text><text x="568" y="160" text-anchor="middle" class="t3">después: $0</text>
-<g class="t3" text-anchor="middle"><text x="88" y="208">1</text><text x="136" y="208">2</text><text x="184" y="208">3</text><text x="232" y="208">4</text><text x="280" y="208">5</text><text x="328" y="208">6</text><text x="376" y="208">7</text><text x="424" y="208">8</text><text x="472" y="208">9</text><text x="520" y="208">10</text><text x="568" y="208">11</text><text x="616" y="208">12</text></g>
-<text x="355" y="236" text-anchor="middle" class="t3">hora extra número…</text>
-</svg>
-<figcaption>Las primeras 8,3 horas extra de Validación valen $100.000 cada una. Después, nada.</figcaption>
-</figure>
+<h3>Cómo se calcula, en cuatro pasos</h3>
+<ol>
+<li><b>Parte del mejor plan</b> y anota su margen: $6.600.000.</li>
+<li><b>Dale una hora más a una estación.</b> Por ejemplo, Validación pasa de 48 a 49 horas.</li>
+<li><b>Busca otra vez la mejor esquina.</b> Si siguen llenas las mismas dos estaciones, basta resolver sus dos ecuaciones con la capacidad nueva.</li>
+<li><b>Resta:</b> margen nuevo − margen anterior. Esa diferencia es el precio sombra.</li>
+</ol>
+<div class="calc">
+<span class="k">Validación con 49 h:</span> 2,4·x₁ + 1,2·x₂ = 49 &nbsp;y&nbsp; 0,8·x₁ + 1,8·x₂ = 36 → x₁ = 13,39; x₂ = 14,05<br>
+Z = 280.000 × 13,39 + 210.000 × 14,05 = $6.700.000 → 6.700.000 − 6.600.000 = <b>$100.000</b><br><br>
+<span class="k">Cierre con 37 h:</span> 2,4·x₁ + 1,2·x₂ = 48 &nbsp;y&nbsp; 0,8·x₁ + 1,8·x₂ = 37 → x₁ = 12,50; x₂ = 15,00<br>
+Z = 280.000 × 12,5 + 210.000 × 15 = $6.650.000 → 6.650.000 − 6.600.000 = <b>$50.000</b><br><br>
+<span class="k">Análisis con 41 h:</span> ya le sobraban 5,14 h, así que el mejor plan no cambia → Z sigue en $6.600.000 → <b>$0</b>
+</div>
+<h3>Simulador: dale horas extra a una estación</h3>
+<div class="sim" id="s5">
+<div class="sim-seg" id="s5-st" role="group" aria-label="Estación">
+<button data-s="0">Análisis</button><button data-s="1" class="on">Validación</button><button data-s="2">Cierre</button>
+</div>
+<div class="sim-sl"><span>Horas extra en <b id="s5-n">Validación</b></span><input type="range" id="s5-h" min="0" max="30" step="0.1" value="1" aria-label="Horas extra"><b id="s5-ho"></b></div>
+<div class="sim-btns"><button data-h="1">1 hora</button><button data-h="8.3">8,3 horas</button><button data-h="12">12 horas</button><button data-h="30">30 horas</button></div>
+<svg id="s5-svg" class="sim-svg" viewBox="0 0 680 230" role="img" aria-label="Valor de cada hora extra en la estación elegida"></svg>
+<p class="sim-cap">Cada barra es lo que vale <b>esa</b> hora extra (la 1.ª, la 2.ª, …). Pasa el cursor sobre las barras para elegir cuántas horas agregar.</p>
+<div class="sim-kpis">
+<div class="mc2"><div class="l">Capacidad nueva</div><div class="v" id="s5-k1"></div></div>
+<div class="mc2"><div class="l">Nuevo mejor plan</div><div class="v" id="s5-k2"></div></div>
+<div class="mc2"><div class="l">Margen Z</div><div class="v" id="s5-k3"></div><div class="s" id="s5-k3s"></div></div>
+<div class="mc2"><div class="l">Valor de la próxima hora</div><div class="v" id="s5-k4"></div></div>
+</div>
+<div class="calc" id="s5-calc"></div>
+<div class="wi"><p class="wi-t">¿Qué pasaría si…?</p><ul id="s5-wi"></ul></div>
+</div>
+<p>Es como ensanchar un tramo de carretera: ayuda mientras ese tramo sea el que tiene el trancón. Cuando el trancón se muda al tramo siguiente, seguir ensanchando el primero ya no sirve. Por eso un precio sombra siempre viene con su <b>rango de validez</b>: el intervalo de horas en el que mantiene su valor.</p>
 </section>
 
 <section id="oferta">
 <h2><span class="num">6</span>La oferta tentadora</h2>
 <p>Llega un contratista y te ofrece <b>100 horas de Validación al día a $75.000 cada una</b>. Alguien hace la cuenta rápida: "si cada hora vale $100.000 y me cuesta $75.000, ¡gano $25.000 por hora! Son 100 horas: ganamos $2,5 millones". ¿Dónde está la trampa?</p>
-<figure>
-<svg viewBox="0 0 680 190" role="img" aria-label="Comparación: se pagarían 7,5 millones y solo se recibirían 0,83 millones">
-<text x="20" y="40" class="t1">Pagas</text><rect x="130" y="22" width="480" height="28" rx="4" style="fill:var(--text-muted)"/><text x="598" y="42" class="t1" text-anchor="end" style="fill:#fff">$7.500.000</text>
-<text x="20" y="92" class="t1">Recibes</text><rect x="130" y="74" width="53" height="28" rx="4" fill="#6250d6"/><text x="192" y="94" class="t1">$830.769</text>
-<text x="20" y="150" class="t1" style="fill:var(--text-danger)">Pierdes $6.669.231 cada día</text>
-<text x="20" y="174" class="t3">Solo las primeras 8,3 horas producen algo. Las otras 91,7 se pagan y no sirven.</text>
-</svg>
-<figcaption>El precio sombra solo vale dentro de su rango. Extrapolarlo a 100 horas exagera la ganancia 12 veces.</figcaption>
-</figure>
-<p>La trampa es la que viste en la sección 5: solo las primeras 8,3 horas rinden. <b>Moraleja:</b> no aceptes las 100 horas; negocia comprar <b>solo unas 8</b>. Así sí ganas: unos <b>$207.000 al día</b>.</p>
+<div class="dict">
+<p class="dict-t">Los datos de la oferta</p>
+<dl>
+<dt>Horas ofrecidas</dt><dd>100 h de Validación por día.</dd>
+<dt>Precio</dt><dd>$75.000 por hora, es decir, 100 × 75.000 = $7.500.000 al día.</dd>
+<dt>Lo que vale una hora</dt><dd>$100.000 (el precio sombra de Validación, sección 5)… pero solo hasta 8,31 h extra, cuando Validación llega a 56,31 h y deja de ser el cuello de botella.</dd>
+</dl>
+</div>
+<h3>Cómo se calcula</h3>
+<ol>
+<li><b>Costo de la oferta</b> = horas × precio por hora.</li>
+<li><b>Aumento real del margen</b> = margen con Validación ampliada − $6.600.000. No sirve multiplicar 100.000 × 100: solo las horas dentro del rango valen $100.000; las demás valen $0.</li>
+<li><b>Ganancia neta</b> = aumento real − costo. Si es negativa, la oferta hace perder plata.</li>
+<li><b>Mejor compra</b>: comprar horas mientras cada una rinda más de lo que cuesta. Aquí, hasta 8,31 h si el precio es menor que $100.000.</li>
+</ol>
+<h3>Simulador: negocia con el contratista</h3>
+<div class="sim" id="s6">
+<div class="sim-btns"><button data-o="100,75000">Oferta original (100 h a $75.000)</button><button data-o="8.3,75000">Comprar solo 8,3 h</button><button data-o="100,110000">Hora a $110.000</button><button data-o="100,8300">¿A qué precio servirían las 100 h?</button></div>
+<div class="sim-sl"><span>Horas que compras</span><input type="range" id="s6-h" min="0" max="100" step="0.1" value="100" aria-label="Horas que compras"><b id="s6-ho"></b></div>
+<div class="sim-sl"><span>Precio por hora</span><input type="range" id="s6-p" min="5000" max="150000" step="100" value="75000" aria-label="Precio por hora"><b id="s6-po"></b></div>
+<svg id="s6-strip" class="sim-svg" viewBox="0 0 680 82" role="img" aria-label="Horas compradas: cuántas producen margen y cuántas no"></svg>
+<svg id="s6-bars" class="sim-svg" viewBox="0 0 680 128" role="img" aria-label="Comparación entre lo que pagas y lo que recibes"></svg>
+<div class="calc" id="s6-calc"></div>
+<div class="wi"><p class="wi-t">¿Qué pasaría si…?</p><ul id="s6-wi"></ul></div>
+</div>
+<p><b>Moraleja:</b> un precio sombra solo vale dentro de su rango. Extrapolarlo a 100 horas exagera la ganancia 12 veces. Lo sensato es no aceptar las 100 horas y negociar <b>solo unas 8</b>.</p>
 </section>
 
 <section id="convenio">
 <h2><span class="num">7</span>El interruptor del convenio</h2>
-<p>Hay un detalle más: para atender pedidos Prioritarios hay que <b>encender un equipo especial</b> que cuesta <b>$450.000 al día</b>, sin importar si atiendes 1 o 14 pedidos. Es un interruptor: o lo enciendes o no. En el modelo esto se representa con una <i>variable binaria</i>, que solo puede valer 0 (apagado) o 1 (encendido).</p>
-<div class="cards2">
-<div class="pc"><p class="pc-n">Interruptor apagado</p><p class="pc-v">$5.600.000</p><p class="pc-s">Solo 20 pedidos Estándar.</p></div>
-<div class="pc" style="border:2px solid #6250d6"><p class="pc-n">Interruptor encendido</p><p class="pc-v">$6.130.000</p><p class="pc-s">13 Estándar + 14 Prioritarios, ya restando los $450.000.</p></div>
+<p>Hay un detalle más: para atender pedidos Prioritarios hay que <b>encender un equipo especial</b> que cuesta <b>$450.000 al día</b>, sin importar si atiendes 1 o 14 pedidos. Es un interruptor: o lo enciendes o no. En el modelo esto se representa con una <i>variable binaria</i> y, que solo puede valer 0 (apagado) o 1 (encendido).</p>
+<div class="dict">
+<p class="dict-t">Los datos que usamos</p>
+<dl>
+<dt>Costo fijo</dt><dd>$450.000 al día si el equipo está encendido (y = 1); $0 si está apagado (y = 0).</dd>
+<dt>Regla del interruptor</dt><dd>x₂ ≤ 20·y: con el equipo apagado no se atienden Prioritarios; encendido, hasta 20 (el máximo que cabe en Cierre: 36 ÷ 1,8 = 20).</dd>
+<dt>Números enteros</dt><dd>Aquí no existe "medio pedido": x₁ y x₂ deben ser enteros.</dd>
+</dl>
 </div>
-<p><b>Conviene encenderlo:</b> deja $530.000 más al día. ¿Y si el equipo saliera más caro? Seguiría conviniendo hasta un costo de <b>$980.000</b> al día, más del doble del actual:</p>
-<figure>
-<svg viewBox="0 0 680 140" role="img" aria-label="Escala de costo fijo: conviene encender hasta 980 mil pesos; hoy cuesta 450 mil">
-<rect x="60" y="50" width="379" height="26" rx="4" fill="#1baf7a" fill-opacity="0.25"/><rect x="439" y="50" width="201" height="26" rx="4" style="fill:var(--surface-1)"/>
-<text x="250" y="68" text-anchor="middle" class="t2">conviene encender</text><text x="540" y="68" text-anchor="middle" class="t3">mejor apagado</text>
-<line x1="234" y1="38" x2="234" y2="88" style="stroke:var(--text-primary)" stroke-width="2"/><text x="234" y="30" text-anchor="middle" class="t2">hoy: $450.000</text>
-<line x1="439" y1="38" x2="439" y2="88" style="stroke:var(--text-danger)" stroke-width="2"/><text x="439" y="30" text-anchor="middle" class="t2" style="fill:var(--text-danger)">límite: $980.000</text>
-<text x="60" y="108" class="t3">$0</text><text x="640" y="108" text-anchor="end" class="t3">$1.500.000</text>
-<text x="340" y="130" text-anchor="middle" class="t3">costo fijo diario del equipo del convenio</text>
-</svg>
-</figure>
+<h3>Cómo se calcula</h3>
+<ol>
+<li><b>Apagado:</b> solo Estándar. La estación que se llena primero es Validación: 48 ÷ 2,4 = 20 pedidos → 20 × $280.000 = $5.600.000.</li>
+<li><b>Encendido:</b> el mejor plan entero con Prioritarios es 13 Estándar + 14 Prioritarios → margen bruto 280.000 × 13 + 210.000 × 14 = $6.580.000. El margen neto resta el costo fijo: 6.580.000 − 450.000 = $6.130.000.</li>
+<li><b>Comparar:</b> se enciende si el neto encendido supera al apagado.</li>
+<li><b>Costo crítico:</b> el costo fijo con el que ambas opciones empatan = margen bruto encendido − margen apagado = 6.580.000 − 5.600.000 = $980.000.</li>
+</ol>
+<h3>Simulador: ¿enciendes el equipo?</h3>
+<div class="sim" id="s7">
+<div class="sim-btns"><button data-c="450000,210000">Caso base</button><button data-c="980000,210000">Costo en el límite</button><button data-c="1200000,210000">Costo de $1.200.000</button><button data-c="450000,150000">El Prioritario deja $150.000</button></div>
+<div class="sim-sl"><span>Costo fijo del equipo</span><input type="range" id="s7-c" min="0" max="1500000" step="10000" value="450000" aria-label="Costo fijo del equipo"><b id="s7-co"></b></div>
+<div class="sim-sl"><span>Margen del Prioritario</span><input type="range" id="s7-m" min="100000" max="400000" step="10000" value="210000" aria-label="Margen del Prioritario"><b id="s7-mo"></b></div>
+<div class="cards2" id="s7-cards"></div>
+<svg id="s7-svg" class="sim-svg" viewBox="0 0 680 120" role="img" aria-label="Escala del costo fijo con el punto en que deja de convenir encender el equipo"></svg>
+<div class="calc" id="s7-calc"></div>
+<div class="wi"><p class="wi-t">¿Qué pasaría si…?</p><ul id="s7-wi"></ul></div>
+</div>
+<script>
+(function(){
+const ST=[{n:'Análisis',a:1.6,b:1.0,cap:40,col:'#2a78d6'},{n:'Validación',a:2.4,b:1.2,cap:48,col:'#eb6834'},{n:'Cierre',a:0.8,b:1.8,cap:36,col:'#1baf7a'}];
+const C1=280000,C2=210000,EPS=1e-7;
+const nf=(v,d=2)=>new Intl.NumberFormat('es-CO',{minimumFractionDigits:0,maximumFractionDigits:d}).format(v);
+const nf2=v=>new Intl.NumberFormat('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2}).format(v);
+const $m=v=>(v<0?'−':'')+'$'+new Intl.NumberFormat('es-CO').format(Math.round(Math.abs(v)));
+const $=id=>document.getElementById(id);
+const dark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches};
+function clip(p,a,b,c){const o=[];for(let i=0;i<p.length;i++){const P=p[i],Q=p[(i+1)%p.length],fp=a*P[0]+b*P[1]-c,fq=a*Q[0]+b*Q[1]-c;if(fp<=1e-9)o.push(P);if((fp<-1e-9&&fq>1e-9)||(fp>1e-9&&fq<-1e-9)){const t=fp/(fp-fq);o.push([P[0]+t*(Q[0]-P[0]),P[1]+t*(Q[1]-P[1])])}}return o}
+function lp(caps,c2=C2){let p=[[0,0],[100,0],[100,100],[0,100]];ST.forEach((s,i)=>{p=clip(p,s.a,s.b,caps[i])});let b=null;for(const v of p){const z=C1*v[0]+c2*v[1];if(!b||z>b.z+1e-6)b={x1:v[0],x2:v[1],z}}return b}
+const capsWith=(s,h)=>ST.map((t,i)=>t.cap+(i===s?h:0));
+const Zs=(s,h)=>lp(capsWith(s,h)).z;
+const Z0=Zs(0,0);
+const val=(s,h)=>(Zs(s,h+0.01)-Zs(s,h))/0.01;
+function segEnd(s,h){const v=val(s,h),z0=Zs(s,h),lin=t=>Math.abs(Zs(s,t)-(z0+v*(t-h)))<0.5;for(let t=h+0.05;t<=80;t+=0.05){if(!lin(t)){let lo=t-0.05,hi=t;for(let k=0;k<40;k++){const m=(lo+hi)/2;if(lin(m))lo=m;else hi=m}return lo}}return null}
+const llenas=(s,h,p)=>{const k=capsWith(s,h);return ST.filter((t,i)=>Math.abs(t.a*p.x1+t.b*p.x2-k[i])<1e-6).map(t=>t.n)};
+const lista=a=>a.length<=1?(a[0]||''):a.slice(0,-1).join(', ')+' y '+a[a.length-1];
+const grid=()=>dark()?'#2c2c2a':'#e1e0d9';
+const vw=(id,h)=>{const e=$(id),w=Math.max(340,Math.min(680,Math.round(e.getBoundingClientRect().width||680)));e.setAttribute('viewBox',`0 0 ${w} ${h}`);return w};
+const T=(x,y,t,o='')=>`<text x="${x}" y="${y}" style="font-size:11px;fill:var(--text-muted)" ${o}>${t}</text>`;
+
+/* ---------- Sección 5 ---------- */
+let s5=1;
+function r5(){
+ const h=+$('s5-h').value,st=ST[s5];$('s5-n').textContent=st.n;$('s5-ho').textContent=nf(h,1)+' h';
+ document.querySelectorAll('#s5-st button').forEach(b=>b.classList.toggle('on',+b.dataset.s===s5));
+ const V=[];for(let k=1;k<=30;k++)V.push(Zs(s5,k)-Zs(s5,k-1));
+ const W5=vw('s5-svg',230),X0=58,X1=W5-10,Y0=190,Y1=24,MAX=110000,bw=(X1-X0)/30,by=v=>Y0-v/MAX*(Y0-Y1);
+ let s='';for(const v of [0,50000,100000])s+=`<line x1="${X0}" x2="${X1}" y1="${by(v)}" y2="${by(v)}" stroke="${grid()}"/>`+T(X0-6,by(v)+4,$m(v),'text-anchor="end"');
+ V.forEach((v,i)=>{const k=i+1,on=k<=Math.ceil(h-1e-9),x=X0+i*bw+3;const hh=Math.max(v/MAX*(Y0-Y1),0);
+  s+=hh>0.5?`<rect x="${x}" y="${Y0-hh}" width="${bw-6}" height="${hh}" rx="3" fill="${st.col}" fill-opacity="${on?1:0.22}"/>`:`<rect x="${x}" y="${Y0-3}" width="${bw-6}" height="3" rx="1.5" style="fill:var(--text-muted)" fill-opacity="${on?0.8:0.3}"/>`;
+  if(k%5===0||k===1)s+=T(x+(bw-6)/2,Y0+15,k,'text-anchor="middle"')});
+ s+=T((X0+X1)/2,Y0+32,'hora extra número…','text-anchor="middle"');
+ const hv=Math.min(30,Math.max(1,Math.ceil(h)));const vv=V[hv-1];const tx=Math.min(X0+(hv-1)*bw,X1-170);
+ s+=`<rect x="${tx}" y="2" width="168" height="20" rx="5" style="fill:var(--surface-2);stroke:var(--border-strong)" stroke-width=".5"/><text x="${tx+8}" y="16" style="font-size:11.5px;fill:var(--text-primary)">Hora ${hv}: vale ${$m(vv)}</text>`;
+ $('s5-svg').innerHTML=s;
+ const p=lp(capsWith(s5,h)),dz=p.z-Z0,nx=val(s5,h),full=llenas(s5,h,p);
+ $('s5-k1').textContent=`${nf(st.cap+h,2)} h`;$('s5-k2').textContent=`${nf2(p.x1)} E + ${nf2(p.x2)} P`;
+ $('s5-k3').textContent=$m(p.z);$('s5-k3s').textContent=`${dz>=0?'+':''}${$m(dz)} frente al plan actual`;$('s5-k4').textContent=$m(nx);
+ const kk=capsWith(s5,h);let c=`<span class="k">Con ${nf(h,1)} h extra en ${st.n}</span> (capacidad ${nf(st.cap,0)} + ${nf(h,1)} = ${nf(kk[s5],2)} h):<br>`;
+ if(full.length>=2){const[a,b]=full.map(n=>ST.find(t=>t.n===n));const ka=kk[ST.indexOf(a)],kb=kk[ST.indexOf(b)];
+  c+=`La mejor esquina está donde se cruzan ${a.n} y ${b.n}. Se resuelven a la vez:<br>${nf(a.a,1)}·x₁ + ${nf(a.b,1)}·x₂ = ${nf(ka,2)} &nbsp;y&nbsp; ${nf(b.a,1)}·x₁ + ${nf(b.b,1)}·x₂ = ${nf(kb,2)} → x₁ = ${nf2(p.x1)}; x₂ = ${nf2(p.x2)}<br>`}
+ else c+=`El mejor plan queda en x₁ = ${nf2(p.x1)}; x₂ = ${nf2(p.x2)} (estaciones llenas: ${lista(full)||'ninguna'}).<br>`;
+ c+=`Z = 280.000 × ${nf2(p.x1)} + 210.000 × ${nf2(p.x2)} = ${$m(p.z)} → ${$m(p.z)} − $6.600.000 = <b>${$m(dz)}</b>`;
+ if(h>0)c+=` &nbsp;(en promedio ${$m(dz/h)} por hora)`;
+ $('s5-calc').innerHTML=c;
+ const W=[];const v0=val(s5,0),end0=segEnd(s5,0);
+ if(v0<1){W.push(`${st.n} tiene horas de sobra (le sobran ${nf2(st.cap-(st.a*12.857142857+st.b*14.285714286))} h en el plan actual). Darle más horas no cambia el plan: cada hora extra vale $0. Invertir aquí sería botar la plata.`);
+  W.push('Para que una hora de Análisis valiera algo, primero habría que ampliar Validación más de 8,31 h; solo entonces Análisis se llena y empieza a mandar.')}
+ else{W.push(`Cada hora extra en ${st.n} vale ${$m(v0)} mientras sigan llenas Validación y Cierre.`+(end0?` Eso dura hasta ${nf2(end0)} h extra (${nf2(st.cap+end0)} h en total).`:' Ese valor se mantiene en todo el rango del simulador.'));
+  if(end0){const after=lp(capsWith(s5,end0+0.05)),fa=llenas(s5,end0+0.05,after);W.push(`Pasadas las ${nf2(end0)} h, se llenan ${lista(fa)}: el cuello de botella se muda y cada hora extra de ${st.n} pasa a valer ${$m(val(s5,end0+0.05))}.`)}
+  if(h>0&&end0&&h>end0)W.push(`Con ${nf(h,1)} h, la cuenta rápida (${$m(v0)} × ${nf(h,1)} = ${$m(v0*h)}) exagera: el aumento real es solo ${$m(dz)}.`);
+  if(s5===1)W.push('Si tuvieras que elegir dónde poner una hora, Validación gana: rinde el doble que Cierre ($100.000 frente a $50.000).');
+  if(s5===2)W.push('Cierre rinde la mitad que Validación por hora, pero su efecto dura mucho más: hasta 36 h extra.')}
+ $('s5-wi').innerHTML=W.map(t=>`<li>${t}</li>`).join('');
+}
+document.querySelectorAll('#s5-st button').forEach(b=>b.addEventListener('click',()=>{s5=+b.dataset.s;r5()}));
+document.querySelectorAll('#s5 .sim-btns button').forEach(b=>b.addEventListener('click',()=>{$('s5-h').value=b.dataset.h;r5()}));
+$('s5-h').addEventListener('input',r5);
+$('s5-svg').addEventListener('pointermove',e=>{const r=$('s5-svg').getBoundingClientRect(),W5c=+$('s5-svg').getAttribute('viewBox').split(' ')[2],x=(e.clientX-r.left)/r.width*W5c;const k=Math.ceil((x-58)/((W5c-10-58)/30));if(k>=1&&k<=30&&+$('s5-h').value!==k){$('s5-h').value=k;r5()}});
+
+/* ---------- Sección 6 ---------- */
+const LIM=segEnd(1,0);
+function r6(){
+ const h=+$('s6-h').value,pr=+$('s6-p').value;$('s6-ho').textContent=nf(h,1)+' h';$('s6-po').textContent=$m(pr);
+ const zh=Zs(1,h),au=zh-Z0,co=h*pr,ne=au-co,ex=100000*h,util=Math.min(h,LIM),inut=Math.max(h-LIM,0);
+ const W6=vw('s6-strip',82),X0=20,X1=W6-20,sx=v=>X0+v/100*(X1-X0);
+ let s=`<rect x="${X0}" y="26" width="${sx(100)-X0}" height="24" rx="5" style="fill:var(--surface-1);stroke:var(--border)"/>`;
+ if(util>0)s+=`<rect x="${X0}" y="26" width="${sx(util)-X0}" height="24" rx="5" fill="#6250d6"/>`;
+ if(inut>0)s+=`<rect x="${sx(util)}" y="26" width="${sx(h)-sx(util)}" height="24" style="fill:var(--text-muted)" fill-opacity=".45"/>`;
+ s+=`<text x="${X0}" y="17" style="font-size:12.5px;fill:var(--text-secondary)">Compras ${nf(h,1)} h · <tspan style="fill:#6250d6;font-weight:500">${nf2(util)} h producen margen</tspan></text>`;
+ s+=`<line x1="${sx(LIM)}" x2="${sx(LIM)}" y1="22" y2="54" style="stroke:var(--text-primary)" stroke-width="2"/>`+T(sx(LIM)+4,68,`límite: ${nf2(LIM)} h`)+(inut>0?`<text x="${X1}" y="68" text-anchor="end" style="font-size:12px;font-weight:500;fill:var(--text-secondary)">${nf2(inut)} h no sirven</text>`:T(X1,68,'100 h','text-anchor="end"'));
+ $('s6-strip').innerHTML=s;
+ const W6b=vw('s6-bars',128),mx=Math.max(co,au,1),bw=v=>Math.max(v/mx*(W6b-230),2);
+ let b=`<text x="20" y="30" style="font-size:14px;font-weight:500;fill:var(--text-primary)">Pagas</text><rect x="120" y="14" width="${bw(co)}" height="24" rx="4" style="fill:var(--text-muted)"/><text x="${128+bw(co)}" y="31" style="font-size:13px;font-weight:500;fill:var(--text-primary)">${$m(co)}</text>`;
+ b+=`<text x="20" y="72" style="font-size:14px;font-weight:500;fill:var(--text-primary)">Recibes</text><rect x="120" y="56" width="${bw(au)}" height="24" rx="4" fill="#6250d6"/><text x="${128+bw(au)}" y="73" style="font-size:13px;font-weight:500;fill:var(--text-primary)">${$m(au)}</text>`;
+ b+=`<text x="20" y="114" style="font-size:15px;font-weight:500;fill:${ne<0?'var(--text-danger)':'#0b8f3a'}">${ne<0?'Pierdes '+$m(-ne):'Ganas '+$m(ne)} cada día</text>`;
+ $('s6-bars').innerHTML=b;
+ let c=`<span class="k">1. Costo:</span> ${nf(h,1)} h × ${$m(pr)} = <b>${$m(co)}</b><br>`;
+ c+=`<span class="k">2. Aumento real:</span> solo valen las horas hasta ${nf2(LIM)}: ${nf2(util)} h × $100.000 = <b>${$m(au)}</b> (margen nuevo ${$m(zh)} − $6.600.000)<br>`;
+ c+=`<span class="k">3. Ganancia neta:</span> ${$m(au)} − ${$m(co)} = <b>${$m(ne)}</b><br>`;
+ c+=`<span class="k">Cuenta rápida (errada):</span> 100.000 × ${nf(h,1)} = ${$m(ex)}`+(au>0&&ex>au*1.01?`, ${nf(ex/au,1)} veces más que lo real`:'');
+ $('s6-calc').innerHTML=c;
+ const W=[];
+ if(h>0)W.push(`Para que este paquete de ${nf(h,1)} h no te haga perder, el precio no debería pasar de <b>${$m(au/h)}</b> por hora (aumento real ÷ horas).`);
+ if(pr<100000)W.push(`Con el precio de ${$m(pr)}, lo mejor es comprar <b>${nf2(LIM)} h</b>: cada una rinde $100.000 y cuesta ${$m(pr)}, así que ganas ${$m(LIM*(100000-pr))} al día. Comprar más solo suma costo.`);
+ else W.push(`Con el precio de ${$m(pr)}, <b>no conviene ninguna hora</b>: cuesta más de lo que rinde la mejor hora ($100.000).`);
+ if(inut>0&&h<100)W.push(`Si el contratista solo vendiera en paquetes de 100 h, necesitarías un precio de ${$m(au/100)} por hora o menos para no perder; a $75.000 la respuesta es no.`);
+ W.push('Con números enteros (sección 7) la compra óptima es de 7,2 h: alcanzan para pasar a 17 Estándar + 12 Prioritarios.');
+ $('s6-wi').innerHTML=W.map(t=>`<li>${t}</li>`).join('');
+ document.querySelectorAll('#s6 .sim-btns button').forEach(x=>x.classList.toggle('on',x.dataset.o===`${h},${pr}`));
+}
+document.querySelectorAll('#s6 .sim-btns button').forEach(b=>b.addEventListener('click',()=>{const[h,p]=b.dataset.o.split(',');$('s6-h').value=h;$('s6-p').value=p;r6()}));
+$('s6-h').addEventListener('input',r6);$('s6-p').addEventListener('input',r6);
+
+/* ---------- Sección 7 ---------- */
+function mip(c2){let con={z:-1},sin={z:-1};for(let a=0;a<=30;a++)for(let b=0;b<=20;b++){if(ST.some(s=>s.a*a+s.b*b>s.cap+1e-9))continue;const z=C1*a+c2*b;if(b===0){if(z>sin.z)sin={z,a,b}}else if(z>con.z)con={z,a,b}}return{con,sin}}
+function r7(){
+ const cf=+$('s7-c').value,c2=+$('s7-m').value;$('s7-co').textContent=$m(cf);$('s7-mo').textContent=$m(c2);
+ const{con,sin}=mip(c2),net=con.z-cf,on=net>sin.z,cr=con.z-sin.z;
+ $('s7-cards').innerHTML=`<div class="pc"${!on?' style="border:2px solid #6250d6"':''}><p class="pc-n">Apagado${!on?' · conviene':''}</p><p class="pc-v">${$m(sin.z)}</p><p class="pc-s">${sin.a} Estándar · sin costo fijo.</p></div><div class="pc"${on?' style="border:2px solid #6250d6"':''}><p class="pc-n">Encendido${on?' · conviene':''}</p><p class="pc-v">${$m(net)}</p><p class="pc-s">${con.a} Estándar + ${con.b} Prioritarios: ${$m(con.z)} − ${$m(cf)} de costo fijo.</p></div>`;
+ const W7=vw('s7-svg',120),X0=40,X1=W7-40,M=1500000,sx=v=>X0+Math.min(v,M)/M*(X1-X0);
+ let s=`<rect x="${X0}" y="46" width="${X1-X0}" height="26" rx="5" style="fill:var(--surface-1)"/>`;
+ if(cr>0)s+=`<rect x="${X0}" y="46" width="${sx(cr)-X0}" height="26" rx="5" fill="#1baf7a" fill-opacity="0.28"/>`;
+ if(cr>0)s+=`<text x="${(X0+sx(cr))/2}" y="64" text-anchor="middle" style="font-size:12.5px;fill:var(--text-secondary)">conviene encender</text>`;
+ if(cr<M)s+=`<text x="${(sx(Math.max(cr,0))+X1)/2}" y="64" text-anchor="middle" style="font-size:12.5px;fill:var(--text-muted)">mejor apagado</text>`;
+ if(cr>0&&cr<=M)s+=`<line x1="${sx(cr)}" x2="${sx(cr)}" y1="38" y2="80" style="stroke:var(--text-danger)" stroke-width="2"/><text x="${sx(cr)}" y="96" text-anchor="middle" style="font-size:12px;fill:var(--text-danger)">límite ${$m(cr)}</text>`;
+ s+=`<line x1="${sx(cf)}" x2="${sx(cf)}" y1="36" y2="82" style="stroke:var(--text-primary)" stroke-width="2.5"/><text x="${Math.min(Math.max(sx(cf),70),W7-70)}" y="28" text-anchor="middle" style="font-size:12.5px;font-weight:500;fill:var(--text-primary)">tu costo: ${$m(cf)}</text>`;
+ s+=T(X0,114,'$0')+T(X1,114,'$1.500.000','text-anchor="end"');
+ $('s7-svg').innerHTML=s;
+ let c=`<span class="k">Apagado:</span> 20 Estándar × $280.000 = <b>${$m(sin.z)}</b><br>`;
+ c+=`<span class="k">Encendido:</span> 280.000 × ${con.a} + ${nf(c2,0)} × ${con.b} = ${$m(con.z)} de margen bruto → ${$m(con.z)} − ${$m(cf)} = <b>${$m(net)}</b><br>`;
+ c+=`<span class="k">Diferencia:</span> ${$m(net)} − ${$m(sin.z)} = <b>${$m(net-sin.z)}</b> → ${on?'conviene encender':'conviene dejarlo apagado'}<br>`;
+ c+=`<span class="k">Costo crítico:</span> ${$m(con.z)} − ${$m(sin.z)} = <b>${$m(cr)}</b>`;
+ $('s7-calc').innerHTML=c;
+ const W=[];
+ if(on)W.push(`Tienes un colchón de ${$m(cr-cf)}: el costo fijo podría subir hasta ${$m(cr)} y encender seguiría conviniendo.`);
+ else W.push(`El equipo cuesta ${$m(cf-cr)} más de lo que aportan los Prioritarios. Para que convenga, su costo tendría que bajar a menos de ${$m(cr)}.`);
+ if(c2!==210000)W.push(`Con un Prioritario que deja ${$m(c2)}, el mejor plan encendido cambia a ${con.a} E + ${con.b} P y el costo crítico pasa de $980.000 a ${$m(cr)}.`);
+ else W.push('Si el Prioritario dejara menos margen, el costo crítico bajaría; prueba el botón "El Prioritario deja $150.000".');
+ W.push('Fíjate en que el margen apagado no depende del Prioritario ni del costo fijo: siempre es 20 Estándar × $280.000 = $5.600.000.');
+ $('s7-wi').innerHTML=W.map(t=>`<li>${t}</li>`).join('');
+ document.querySelectorAll('#s7 .sim-btns button').forEach(x=>x.classList.toggle('on',x.dataset.c===`${cf},${c2}`));
+}
+document.querySelectorAll('#s7 .sim-btns button').forEach(b=>b.addEventListener('click',()=>{const[c,m]=b.dataset.c.split(',');$('s7-c').value=c;$('s7-m').value=m;r7()}));
+$('s7-c').addEventListener('input',r7);$('s7-m').addEventListener('input',r7);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{r5();r6();r7()});
+r5();r6();r7();
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{r5();r6();r7()},120)});
+})();
+</script>
 <h3>¿Por qué no basta con redondear?</h3>
 <p>Con el interruptor también exigimos números enteros: no existe "medio pedido". La tentación es redondear 12,86 → 13 y 14,29 → 14. Funciona aquí, pero no siempre; mira qué pasa con los cuatro redondeos posibles:</p>
 <figure>
