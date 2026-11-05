@@ -89,6 +89,8 @@ figcaption{font-size:13px;color:var(--text-secondary);margin-top:10px;line-heigh
 svg .t1{font-size:15px;font-weight:500;fill:var(--text-primary)}
 svg .t2{font-size:13.5px;fill:var(--text-secondary)}
 svg .t3{font-size:12px;fill:var(--text-muted)}
+svg .pn{font-size:10px;font-weight:500;fill:#fff}
+svg .pnx{font-size:10px;font-weight:500;fill:#e34948}
 svg .win{font-size:12px;font-weight:500;fill:#6250d6}
 .dict,.missions{background:var(--surface-1);border-radius:14px;padding:16px 20px;margin:20px 0}
 .dict-t{font-weight:500;margin:0 0 8px}
@@ -171,20 +173,34 @@ footer{margin-top:56px;font-size:13px;color:var(--text-muted);border-top:.5px so
 
 <section id="dilema">
 <h2><span class="num">2</span>El dilema: ¿cuál pedido es "mejor"?</h2>
-<p>A primera vista, el Estándar gana: deja $280.000 y el Prioritario solo $210.000. Pero las horas son el recurso escaso. La pregunta correcta no es "¿cuál paga más?", sino <b>"¿cuál paga más por cada hora que me quita?"</b>.</p>
+<p>A primera vista, el Estándar gana: deja $280.000 y el Prioritario solo $210.000. Pero las horas son el recurso escaso. La pregunta correcta no es "¿cuál paga más?", sino <b>"¿cuál paga más por cada hora que me quita?"</b>. La cuenta es sencilla: margen del pedido dividido entre las horas que gasta en la estación.</p>
 <figure>
-<svg viewBox="0 0 680 270" role="img" aria-label="Margen por hora de cada tipo de pedido en Validación y en Cierre">
-<line x1="40" y1="210" x2="320" y2="210" style="stroke:var(--border-strong)"/><line x1="360" y1="210" x2="640" y2="210" style="stroke:var(--border-strong)"/>
-<rect x="105" y="160" width="56" height="50" rx="4" fill="#6250d6"/><text x="133" y="150" text-anchor="middle" class="t2">$116.667</text>
-<rect x="200" y="135" width="56" height="75" rx="4" fill="#d55181"/><text x="228" y="125" text-anchor="middle" class="t2">$175.000</text><text x="228" y="105" text-anchor="middle" class="win">gana aquí</text>
-<rect x="425" y="60" width="56" height="150" rx="4" fill="#6250d6"/><text x="453" y="50" text-anchor="middle" class="t2">$350.000</text><text x="453" y="30" text-anchor="middle" class="win">gana aquí</text>
-<rect x="520" y="160" width="56" height="50" rx="4" fill="#d55181"/><text x="548" y="150" text-anchor="middle" class="t2">$116.667</text>
-<text x="180" y="234" text-anchor="middle" class="t1">En Validación</text><text x="500" y="234" text-anchor="middle" class="t1">En Cierre</text>
-<text x="180" y="254" text-anchor="middle" class="t3">280.000 ÷ 2,4 · 210.000 ÷ 1,2</text><text x="500" y="254" text-anchor="middle" class="t3">280.000 ÷ 0,8 · 210.000 ÷ 1,8</text>
+<svg viewBox="0 0 680 280" role="img" aria-label="Margen por hora de cada tipo de pedido en Análisis, Validación y Cierre">
+<line x1="20" y1="210" x2="220" y2="210" style="stroke:var(--border-strong)"/><line x1="240" y1="210" x2="440" y2="210" style="stroke:var(--border-strong)"/><line x1="460" y1="210" x2="660" y2="210" style="stroke:var(--border-strong)"/>
+<rect x="65" y="135" width="50" height="75" rx="4" fill="#6250d6"/><text x="90" y="125" text-anchor="middle" class="t2">$175.000</text>
+<rect x="125" y="120" width="50" height="90" rx="4" fill="#d55181"/><text x="150" y="110" text-anchor="middle" class="t2">$210.000</text><text x="150" y="92" text-anchor="middle" class="win">gana aquí</text>
+<rect x="285" y="160" width="50" height="50" rx="4" fill="#6250d6"/><text x="310" y="150" text-anchor="middle" class="t2">$116.667</text>
+<rect x="345" y="135" width="50" height="75" rx="4" fill="#d55181"/><text x="370" y="125" text-anchor="middle" class="t2">$175.000</text><text x="370" y="107" text-anchor="middle" class="win">gana aquí</text>
+<rect x="505" y="60" width="50" height="150" rx="4" fill="#6250d6"/><text x="530" y="50" text-anchor="middle" class="t2">$350.000</text><text x="530" y="32" text-anchor="middle" class="win">gana aquí</text>
+<rect x="565" y="160" width="50" height="50" rx="4" fill="#d55181"/><text x="590" y="150" text-anchor="middle" class="t2">$116.667</text>
+<text x="120" y="234" text-anchor="middle" class="t1" style="fill:var(--text-muted)">En Análisis</text><text x="340" y="234" text-anchor="middle" class="t1">En Validación</text><text x="560" y="234" text-anchor="middle" class="t1">En Cierre</text>
+<text x="120" y="254" text-anchor="middle" class="t3">280.000 ÷ 1,6 · 210.000 ÷ 1,0</text><text x="340" y="254" text-anchor="middle" class="t3">280.000 ÷ 2,4 · 210.000 ÷ 1,2</text><text x="560" y="254" text-anchor="middle" class="t3">280.000 ÷ 0,8 · 210.000 ÷ 1,8</text>
+<text x="120" y="272" text-anchor="middle" class="t3">nunca se llena: no manda</text><text x="340" y="272" text-anchor="middle" class="t3">se llena: manda</text><text x="560" y="272" text-anchor="middle" class="t3">se llena: manda</text>
 </svg>
-<figcaption>Lo que deja cada pedido por cada hora que ocupa. <span style="color:#6250d6">Morado: Estándar</span> · <span style="color:#d55181">rosado: Prioritario</span>.</figcaption>
+<figcaption>Lo que deja cada pedido por cada hora que ocupa en cada estación. <span style="color:#6250d6">Morado: Estándar</span> · <span style="color:#d55181">rosado: Prioritario</span>.</figcaption>
 </figure>
-<p>¡Sorpresa! Ninguno gana en todo. En Validación rinde más el Prioritario, y en Cierre rinde más el Estándar. Es como armar un equipo de fútbol: no pones once delanteros, aunque los delanteros metan los goles. Necesitas <b>una mezcla</b> que aproveche bien cada estación.</p>
+<p>¡Sorpresa! Ninguno gana en todo. En Análisis y en Validación rinde más el Prioritario; en Cierre rinde más el Estándar. Es como armar un equipo de fútbol: no pones once delanteros, aunque los delanteros metan los goles. Necesitas <b>una mezcla</b>.</p>
+<h3>¿Por qué importan Validación y Cierre, y Análisis no?</h3>
+<p>Comparar "cuánto rinde cada hora" solo tiene sentido en las estaciones que <b>se quedan sin horas</b>. A esas las llamamos las estaciones que <b>mandan</b> (o cuellos de botella): son las que de verdad te obligan a elegir entre un pedido y otro.</p>
+<p>Si una estación tiene horas de sobra, da igual qué pedido rinde más en ella: no tienes que repartir nada. Eso le pasa a <b>Análisis</b>. Hagas el plan que hagas dentro de lo permitido, Análisis nunca llega a llenarse: en el mejor de los casos usa 34,86 de sus 40 horas. Por eso, aunque ahí gane el Prioritario, esa estación no decide nada.</p>
+<div class="note"><b>¿Cómo se sabe qué estaciones mandan?</b> No se adivina: se descubre así.
+<ol style="margin:8px 0 0">
+<li>Se buscan todos los puntos donde se cruzan las líneas de las estaciones (y donde tocan los ejes). Esos son los candidatos a "mejor plan".</li>
+<li>Se descartan los que se pasan del límite de alguna estación.</li>
+<li>De los que quedan, se elige el que más margen deja.</li>
+<li>Las estaciones cuyas líneas se cruzan en ese punto ganador son las que se llenan: <b>esas mandan</b>.</li>
+</ol>
+En la siguiente sección hacemos exactamente eso.</div>
 </section>
 
 <section id="mezcla">
@@ -215,6 +231,66 @@ footer{margin-top:56px;font-size:13px;color:var(--text-muted);border-top:.5px so
 </svg>
 <figcaption>Cada punto dentro del terreno es un plan posible. El mejor está en la esquina C, donde chocan los límites de Validación y de Cierre.</figcaption>
 </figure>
+<h3>¿De dónde salen las esquinas? Las intersecciones</h3>
+<p>Cada estación traza una línea. Las esquinas aparecen donde dos líneas se cruzan, o donde una línea toca un eje (es decir, cuando atiendes un solo tipo de pedido). Con tres estaciones hay tres cruces posibles entre ellas, más los cortes con los ejes. Pero <b>no todo cruce sirve</b>: un punto vale solo si cumple también la tercera estación.</p>
+<figure>
+<svg viewBox="0 0 680 330" role="img" aria-label="Las tres líneas de capacidad, sus cruces y cuáles cumplen todas las restricciones">
+<defs><clipPath id="clI"><rect x="60" y="14" width="350" height="276"/></clipPath></defs>
+<line x1="60" y1="290" x2="410" y2="290" style="stroke:var(--text-muted)"/><line x1="60" y1="290" x2="60" y2="14" style="stroke:var(--text-muted)"/>
+<text x="235" y="318" text-anchor="middle" class="t3">pedidos Estándar al día →</text><text transform="translate(26,152) rotate(-90)" text-anchor="middle" class="t3">pedidos Prioritarios al día →</text>
+<g class="t3" text-anchor="middle"><text x="210" y="304">20</text><text x="247" y="304">25</text><text x="397" y="304">45</text></g>
+<g class="t3" text-anchor="end"><text x="46" y="164">20</text><text x="46" y="34">40</text></g>
+<polygon points="60,290 210,290 156.4,197.1 60,160" fill="#6250d6" fill-opacity="0.14"/>
+<g clip-path="url(#clI)">
+<line x1="60" y1="30" x2="247.5" y2="290" stroke="#2a78d6" stroke-width="2"/>
+<line x1="60" y1="30" x2="210" y2="290" stroke="#eb6834" stroke-width="2" stroke-dasharray="7 4"/>
+<line x1="60" y1="160" x2="397.5" y2="290" stroke="#1baf7a" stroke-width="2" stroke-dasharray="2 3"/>
+</g>
+<text x="250" y="270" class="t3" style="fill:#2a78d6">Análisis</text><text x="178" y="248" class="t3" style="fill:#eb6834" text-anchor="end">Validación</text><text x="330" y="252" class="t3" style="fill:#1baf7a">Cierre</text>
+<g>
+<circle cx="60" cy="290" r="7" fill="#1baf7a"/><text x="60" y="294" text-anchor="middle" class="pn">1</text>
+<circle cx="210" cy="290" r="7" fill="#1baf7a"/><text x="210" y="294" text-anchor="middle" class="pn">2</text>
+<circle cx="247.5" cy="290" r="7" style="fill:var(--surface-2)" stroke="#e34948" stroke-width="2"/><text x="247.5" y="294" text-anchor="middle" class="pnx">3</text>
+<circle cx="397.5" cy="290" r="7" style="fill:var(--surface-2)" stroke="#e34948" stroke-width="2"/><text x="397.5" y="294" text-anchor="middle" class="pnx">4</text>
+<circle cx="60" cy="160" r="7" fill="#1baf7a"/><text x="60" y="164" text-anchor="middle" class="pn">5</text>
+<circle cx="60" cy="30" r="7" style="fill:var(--surface-2)" stroke="#e34948" stroke-width="2"/><text x="60" y="34" text-anchor="middle" class="pnx">6</text>
+<circle cx="189.8" cy="210" r="7" style="fill:var(--surface-2)" stroke="#e34948" stroke-width="2"/><text x="189.8" y="214" text-anchor="middle" class="pnx">7</text>
+<circle cx="156.4" cy="197.1" r="9" style="fill:var(--text-primary);stroke:var(--surface-2)" stroke-width="2"/><text x="156.4" y="201" text-anchor="middle" class="pn" style="fill:var(--surface-2)">8</text>
+</g>
+<g transform="translate(436,30)">
+<text x="0" y="0" class="t1">Cruces entre estaciones</text>
+<text x="0" y="24" class="t2">6 · Análisis ∩ Validación</text><text x="232" y="24" text-anchor="end" class="t2" style="fill:var(--text-danger)">✗</text>
+<text x="0" y="46" class="t2">7 · Análisis ∩ Cierre</text><text x="232" y="46" text-anchor="end" class="t2" style="fill:var(--text-danger)">✗</text>
+<text x="0" y="68" class="t1">8 · Validación ∩ Cierre</text><text x="232" y="68" text-anchor="end" class="t1" style="fill:#0f8a5f">✓ gana</text>
+<text x="0" y="104" class="t1">Cortes con los ejes</text>
+<text x="0" y="128" class="t2">1 · origen (nada)</text><text x="232" y="128" text-anchor="end" class="t2" style="fill:#0f8a5f">✓</text>
+<text x="0" y="150" class="t2">2 · Validación, solo Estándar</text><text x="232" y="150" text-anchor="end" class="t2" style="fill:#0f8a5f">✓</text>
+<text x="0" y="172" class="t2">3 · Análisis, solo Estándar</text><text x="232" y="172" text-anchor="end" class="t2" style="fill:var(--text-danger)">✗</text>
+<text x="0" y="194" class="t2">4 · Cierre, solo Estándar</text><text x="232" y="194" text-anchor="end" class="t2" style="fill:var(--text-danger)">✗</text>
+<text x="0" y="216" class="t2">5 · Cierre, solo Prioritarios</text><text x="232" y="216" text-anchor="end" class="t2" style="fill:#0f8a5f">✓</text>
+<text x="0" y="250" class="t3">✓ cumple las tres estaciones</text><text x="0" y="268" class="t3">✗ se pasa de alguna</text>
+</g>
+</svg>
+<figcaption>Las tres líneas, sus cruces y los cortes con los ejes. Solo los puntos verdes cumplen las tres estaciones; ellos forman las esquinas del terreno permitido.</figcaption>
+</figure>
+<p>Revisemos cada punto. Para saber si un punto "cumple", se reemplazan sus números en las tres estaciones y se mira si alguna se pasa:</p>
+<div class="tw"><table>
+<tr><th>Punto</th><th>Qué se cruza</th><th>Plan (E · P)</th><th>¿Cumple las tres?</th><th>Margen</th></tr>
+<tr><td>6</td><td>Análisis ∩ Validación</td><td>0 · 40</td><td style="color:var(--text-danger)">No: Cierre necesitaría 1,8 × 40 = 72 h y solo hay 36</td><td>—</td></tr>
+<tr><td>7</td><td>Análisis ∩ Cierre</td><td>17,31 · 12,31</td><td style="color:var(--text-danger)">No: Validación necesitaría 56,31 h y solo hay 48</td><td>—</td></tr>
+<tr><td><b>8</b></td><td><b>Validación ∩ Cierre</b></td><td><b>12,86 · 14,29</b></td><td>Sí: Análisis usa 34,86 de 40 h</td><td><b>$6.600.000</b></td></tr>
+<tr><td>1</td><td>Origen</td><td>0 · 0</td><td>Sí</td><td>$0</td></tr>
+<tr><td>2</td><td>Validación con el eje</td><td>20 · 0</td><td>Sí: Análisis 32 h, Cierre 16 h</td><td>$5.600.000</td></tr>
+<tr><td>3</td><td>Análisis con el eje</td><td>25 · 0</td><td style="color:var(--text-danger)">No: Validación necesitaría 2,4 × 25 = 60 h</td><td>—</td></tr>
+<tr><td>4</td><td>Cierre con el eje</td><td>45 · 0</td><td style="color:var(--text-danger)">No: Análisis 72 h y Validación 108 h</td><td>—</td></tr>
+<tr><td>5</td><td>Cierre con el eje</td><td>0 · 20</td><td>Sí: Análisis 20 h, Validación 24 h</td><td>$4.200.000</td></tr>
+</table></div>
+<p>Los cuatro puntos que cumplen (1, 2, 5 y 8) son justo las esquinas A, B, D y C del dibujo anterior. Y aquí está la clave para saber <b>qué estaciones mandan</b>:</p>
+<ul>
+<li>El punto ganador es el <b>8</b>, donde se cruzan <b>Validación y Cierre</b>. Por eso esas dos quedan llenas: mandan.</li>
+<li>Los dos cruces en los que participa <b>Análisis</b> (puntos 6 y 7) se salen del terreno permitido, igual que su corte con el eje (punto 3). La línea de Análisis queda entera por fuera: ningún plan permitido la alcanza. En lenguaje técnico, es una restricción <i>redundante</i>: está, pero no limita.</li>
+<li>Ojo: eso puede cambiar. Si Validación recibe más de 8,3 horas extra, el punto 7 entra al terreno y Análisis empieza a mandar (lo verás en la sección 6).</li>
+</ul>
 <p>La esquina ganadora mezcla <b>unos 13 pedidos Estándar y unos 14 Prioritarios</b> al día y deja <b>$6.600.000</b>. Eso es $1.000.000 más que atender solo Estándar. La intuición inicial te habría costado un millón de pesos diarios.</p>
 <p class="aside">¿Y por qué 12,86 y no 13? Porque el modelo piensa en promedios diarios. Más adelante (sección 7) verás qué pasa cuando exigimos números enteros.</p>
 </section>
@@ -430,6 +506,41 @@ x₁ = 20 − 0,5 × 14,29 = <b>12,86</b><br>
 Z = 280.000 × 12,86 + 210.000 × 14,29 = 3.600.000 + 3.000.000 = <b>$6.600.000</b> &nbsp;← la mayor
 </div>
 <p>El plan óptimo es 12,86 Estándar y 14,29 Prioritarias por día, con un margen de $6.600.000 COP/día.</p></div></details>
+<details class="qa"><summary>P4b. ¿Qué cruces cumplen todas las restricciones y cuáles mandan? [Bloques 4 y 4C]</summary><div class="qb">
+<p>Para cada par de estaciones se resuelven sus dos ecuaciones a la vez (igualando las horas usadas a la capacidad) y después se revisa la tercera estación.</p>
+<div class="calc">
+<span class="k">Análisis ∩ Validación</span><br>
+Análisis: 1,6·x₁ + 1,0·x₂ = 40 → x₂ = 40 − 1,6·x₁<br>
+En Validación: 2,4·x₁ + 1,2·(40 − 1,6·x₁) = 48 → 2,4·x₁ + 48 − 1,92·x₁ = 48 → 0,48·x₁ = 0<br>
+→ <b>x₁ = 0, x₂ = 40</b><br>
+Revisión con Cierre: 0,8 × 0 + 1,8 × 40 = 72 &gt; 36 → <b>no cumple</b>
+</div>
+<div class="calc">
+<span class="k">Análisis ∩ Cierre</span><br>
+Análisis: x₂ = 40 − 1,6·x₁<br>
+En Cierre: 0,8·x₁ + 1,8·(40 − 1,6·x₁) = 36 → 0,8·x₁ + 72 − 2,88·x₁ = 36 → −2,08·x₁ = −36<br>
+→ <b>x₁ = 17,31</b>; x₂ = 40 − 1,6 × 17,31 = <b>12,31</b><br>
+Revisión con Validación: 2,4 × 17,31 + 1,2 × 12,31 = 41,54 + 14,77 = 56,31 &gt; 48 → <b>no cumple</b>
+</div>
+<div class="calc">
+<span class="k">Validación ∩ Cierre</span> (resuelto en P4)<br>
+→ <b>x₁ = 12,86, x₂ = 14,29</b><br>
+Revisión con Análisis: 1,6 × 12,86 + 1,0 × 14,29 = 34,86 ≤ 40 → <b>cumple</b> · Z = $6.600.000
+</div>
+<div class="calc">
+<span class="k">Cortes con los ejes</span> (se atiende un solo tipo)<br>
+Solo Estándar (x₂ = 0): Análisis 40 ÷ 1,6 = 25 · Validación 48 ÷ 2,4 = 20 · Cierre 36 ÷ 0,8 = 45<br>
+&nbsp;&nbsp;x₁ = 20 cumple (Análisis 32 ≤ 40, Cierre 16 ≤ 36); x₁ = 25 y x₁ = 45 no (Validación 60 y 108 &gt; 48)<br>
+Solo Prioritarios (x₁ = 0): Análisis 40 ÷ 1 = 40 · Validación 48 ÷ 1,2 = 40 · Cierre 36 ÷ 1,8 = 20<br>
+&nbsp;&nbsp;x₂ = 20 cumple (Análisis 20 ≤ 40, Validación 24 ≤ 48); x₂ = 40 no (Cierre 72 &gt; 36)
+</div>
+<div class="calc">
+<span class="k">¿Por qué Análisis nunca manda?</span> Horas de Análisis en cada esquina permitida:<br>
+(0, 0): 0 · (20, 0): 1,6 × 20 = 32 · (0, 20): 1,0 × 20 = 20 · (12,86; 14,29): 34,86<br>
+El máximo es 34,86 &lt; 40. Como en un modelo lineal el uso máximo de una estación también ocurre en una esquina, ningún plan permitido llena Análisis: su restricción es <b>redundante</b> y su precio sombra es $0.
+</div>
+<p>Las estaciones que mandan son las que se cruzan en la esquina ganadora: <b>Validación y Cierre</b>. Por eso solo ellas tienen holgura cero y precio sombra positivo.</p>
+</div></details>
 <details class="qa"><summary>P5. ¿Cómo se comparan las posturas iniciales del caso?</summary><div class="qb"><div class="calc">
 <span class="k">Postura A, solo Estándar:</span> calculada arriba, $5.600.000 (−15 % frente al óptimo).<br>
 <span class="k">Postura C, solo Prioritarias:</span> calculada arriba, $4.200.000 (−36 %).<br>
