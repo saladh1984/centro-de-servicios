@@ -2,7 +2,18 @@
 
 Caso del Día 1 del curso **Investigación de Operaciones Avanzada** (Doctorado en Ingeniería de Procesos, Universidad EAN): formulación, solución y análisis de sensibilidad de un modelo lineal de asignación de capacidad, más una extensión con variable binaria (costo fijo).
 
-**Página interactiva:** abre `index.html` en el navegador (o la versión publicada en GitHub Pages). Tiene cuatro gráficos vinculados y la explicación paso a paso de cada cálculo.
+**Página interactiva:** https://saladh1984.github.io/centro-de-servicios/ (o abre `index.html` en el navegador). Explica el caso paso a paso, con ilustraciones, gráficos vinculados y todas las cuentas.
+
+## Método gráfico
+
+[![Vista previa del método gráfico](assets/metodo_grafico_preview.png)](https://saladh1984.github.io/centro-de-servicios/metodo_grafico.html)
+
+**[Abrir gráfico interactivo](https://saladh1984.github.io/centro-de-servicios/metodo_grafico.html)** · también está dentro de la [sección 3 de la página](https://saladh1984.github.io/centro-de-servicios/#metodo-grafico).
+
+Al mover el cursor (o el dedo) sobre el plano, un panel reemplaza los números del punto en el margen Z y en cada restricción, e indica cuántas horas sobran o faltan. Qué observar:
+
+- **Análisis no es una restricción activa:** su línea pasa entera por fuera de la región factible. En el óptimo usa 34,86 de sus 40 horas, y ningún plan permitido la llena.
+- **(13; 15) no es factible aunque esté pegado al óptimo:** necesita 49,2 h de Validación (hay 48) y 37,4 h de Cierre (hay 36). El mejor plan entero es (13; 14), con $6.580.000 de margen antes del costo fijo.
 
 ## El problema
 
@@ -43,8 +54,12 @@ s.a. 1,6 x1 + 1,0 x2 <= 40   (Análisis)
 | Archivo | Descripción |
 |---|---|
 | `index.html` | Página interactiva (sin dependencias externas) con gráficos vinculados y preguntas y respuestas paso a paso |
+| `metodo_grafico.html` | Método gráfico interactivo en un solo archivo (funciona con doble clic) |
+| `assets/metodo_grafico_preview.png` | Vista fija del método gráfico |
 | `Notebook_Dia1.ipynb` | Notebook de Colab con el modelo en Pyomo + HiGHS y el informe de decisión v1 |
-| `requirements.txt` | Librerías para ejecutar el notebook localmente |
+| `scripts/generar_vista_previa.py` | Genera la vista fija con Matplotlib a partir de los datos del modelo |
+| `scripts/verificar_modelo.py` | Comprueba con `scipy.optimize.linprog` (HiGHS) el óptimo, los precios sombra y el óptimo entero |
+| `requirements.txt` | Librerías para ejecutar el notebook y los scripts localmente |
 
 ## Cómo ejecutar el notebook
 

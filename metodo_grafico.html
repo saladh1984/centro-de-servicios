@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Método gráfico interactivo</title>
+<meta name="description" content="Método gráfico del caso Centro de Procesamiento de Servicios: restricciones, región factible, óptimo continuo y entero, con evaluación en vivo de cada restricción.">
+<style>
+:root{
+  --bg:#f7f6f2;--surface-1:#efede6;--surface-2:#ffffff;
+  --text-primary:#0b0b0b;--text-secondary:#52514e;--text-muted:#898781;--text-danger:#c0392b;--text-accent:#1f5fae;
+  --border:rgba(11,11,11,.10);--border-strong:rgba(11,11,11,.20);
+  --grid:#e1e0d9;--radius:8px;
+  --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-serif:Georgia,"Times New Roman",serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121211;--surface-1:#1a1a19;--surface-2:#222221;
+    --text-primary:#f0efec;--text-secondary:#c3c2b7;--text-muted:#898781;--text-danger:#e66767;--text-accent:#7fb0ee;
+    --border:rgba(255,255,255,.10);--border-strong:rgba(255,255,255,.20);--grid:#2c2c2a;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121211;--surface-1:#1a1a19;--surface-2:#222221;
+  --text-primary:#f0efec;--text-secondary:#c3c2b7;--text-muted:#898781;--text-danger:#e66767;--text-accent:#7fb0ee;
+  --border:rgba(255,255,255,.10);--border-strong:rgba(255,255,255,.20);--grid:#2c2c2a;color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:var(--font-sans);font-size:16px;line-height:1.65}
+main{max-width:900px;margin:0 auto;padding:28px 16px 48px}
+h1{font-family:var(--font-serif);font-weight:500;font-size:clamp(24px,5vw,32px);line-height:1.2;margin:0 0 8px}
+p{margin:8px 0;max-width:72ch}
+.lead{color:var(--text-secondary)}
+.card{background:var(--surface-2);border:.5px solid var(--border);border-radius:14px;padding:18px;margin-top:18px}
+.model{font-size:14.5px;background:var(--surface-1);border-radius:12px;padding:12px 16px;line-height:1.75;font-variant-numeric:tabular-nums;margin-top:14px}
+a{color:var(--text-accent)}
+footer{margin-top:28px;font-size:13px;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<main>
+<h1>Método gráfico · Centro de Procesamiento de Servicios</h1>
+<p class="lead">Cada línea es el límite de horas de una estación. El área sombreada son los planes permitidos. Mueve el cursor para probar un plan y ver, con los números reemplazados, si cumple cada restricción.</p>
+<div class="model">Maximizar Z = 280.000·x₁ + 210.000·x₂ (pesos por día)<br>Análisis: 1,6·x₁ + 1,0·x₂ ≤ 40 · Validación: 2,4·x₁ + 1,2·x₂ ≤ 48 · Cierre: 0,8·x₁ + 1,8·x₂ ≤ 36 · x₁, x₂ ≥ 0<br>x₁ = solicitudes Estándar por día · x₂ = solicitudes Prioritarias por día</div>
+<div class="card">
+<div class="mg" id="mg">
+<style>
+.mg{--mg-ok:#0b8f3a;--mg-bad:#d03b3b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mg{--mg-ok:#3fbf62;--mg-bad:#ef6b6b}}
+:root[data-theme="dark"] .mg{--mg-ok:#3fbf62;--mg-bad:#ef6b6b}
+.mg-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px}
+.mg-lg{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--text-secondary)}
+.mg-lg span{display:flex;align-items:center;gap:5px}
+.mg-chk{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-primary);cursor:pointer;user-select:none}
+.mg-chk input{width:18px;height:18px;accent-color:#6250d6}
+#mg-svg{width:100%;height:auto;display:block;touch-action:none;cursor:crosshair}
+.mg-lg svg{display:inline-block;width:auto;flex:none}
+.mg-panel{margin-top:10px;background:var(--surface-1);border-radius:12px;padding:12px 16px;font-size:14.5px;line-height:1.7;font-variant-numeric:tabular-nums}
+.mg-panel .mg-h{font-weight:500;color:var(--text-primary)}
+.mg-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;border-top:.5px solid var(--border);padding:3px 0}
+.mg-row:first-of-type{border-top:0}
+.mg-ok{color:var(--mg-ok);font-weight:500}
+.mg-bad{color:var(--mg-bad);font-weight:500}
+.mg-msg{margin-top:8px;padding:8px 12px;border-radius:8px;font-weight:500}
+.mg-msg.ok{background:color-mix(in srgb,var(--mg-ok) 14%,transparent);color:var(--mg-ok)}
+.mg-msg.bad{background:color-mix(in srgb,var(--mg-bad) 14%,transparent);color:var(--mg-bad)}
+.mg-hint{font-size:12px;color:var(--text-muted);margin-top:6px}
+</style>
+<div class="mg-bar">
+<div class="mg-lg" id="mg-lg"></div>
+<label class="mg-chk"><input type="checkbox" id="mg-int"> Ajustar a enteros</label>
+</div>
+<svg id="mg-svg" viewBox="0 0 680 440" role="img" aria-label="Método gráfico: tres restricciones de capacidad, región factible, óptimo y un punto que sigue al cursor"></svg>
+<div class="mg-panel" id="mg-panel" aria-live="polite"></div>
+<p class="mg-hint">Mueve el cursor (o el dedo) sobre el gráfico. El panel reemplaza los números del punto en cada restricción y en el margen Z.</p>
+<script>
+(function(){
+const C={x1:280000,x2:210000};
+const R=[
+ {n:'Análisis',a:1.6,b:1.0,cap:40,col:['#2a78d6','#3987e5'],dash:''},
+ {n:'Validación',a:2.4,b:1.2,cap:48,col:['#eb6834','#d95926'],dash:'7 4'},
+ {n:'Cierre',a:0.8,b:1.8,cap:36,col:['#1baf7a','#199e70'],dash:'2 3'}
+];
+const X1M=30,X2M=42,P={l:62,r:655,t:18,b:392},VW=680;
+const sx=v=>P.l+v/X1M*(P.r-P.l), sy=v=>P.b-v/X2M*(P.b-P.t);
+const dark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches};
+const col=r=>r.col[dark()?1:0];
+const nf=(v,min=1,max=2)=>new Intl.NumberFormat('es-CO',{minimumFractionDigits:min,maximumFractionDigits:max}).format(v);
+const money=v=>'$'+new Intl.NumberFormat('es-CO',{maximumFractionDigits:0}).format(Math.round(v));
+const EPS=1e-9;
+const uso=(r,x1,x2)=>r.a*x1+r.b*x2;
+const factible=(x1,x2)=>x1>=-EPS&&x2>=-EPS&&R.every(r=>uso(r,x1,x2)<=r.cap+EPS);
+const Z=(x1,x2)=>C.x1*x1+C.x2*x2;
+/* Rectas de la forma a·x1 + b·x2 = c: las tres restricciones y los dos ejes */
+const L=R.map(r=>({a:r.a,b:r.b,c:r.cap})).concat([{a:1,b:0,c:0},{a:0,b:1,c:0}]);
+function cruce(p,q){const d=p.a*q.b-q.a*p.b;if(Math.abs(d)<EPS)return null;return[(p.c*q.b-q.c*p.b)/d,(p.a*q.c-q.a*p.c)/d]}
+/* Vértices: todas las intersecciones de pares de rectas, filtradas por factibilidad */
+let V=[];
+for(let i=0;i<L.length;i++)for(let j=i+1;j<L.length;j++){const p=cruce(L[i],L[j]);if(p&&factible(p[0],p[1])&&!V.some(v=>Math.hypot(v[0]-p[0],v[1]-p[1])<1e-7))V.push(p)}
+const cx=V.reduce((s,v)=>s+v[0],0)/V.length,cy=V.reduce((s,v)=>s+v[1],0)/V.length;
+V.sort((u,v)=>Math.atan2(u[1]-cy,u[0]-cx)-Math.atan2(v[1]-cy,v[0]-cx));
+/* Óptimo continuo: el vértice con mayor Z */
+const OPT=V.reduce((b,v)=>Z(v[0],v[1])>Z(b[0],b[1])?v:b,V[0]);
+/* Puntos enteros factibles y óptimo entero (búsqueda exhaustiva) */
+const ENT=[];let OPTI=null;
+for(let a=0;a<=X1M;a++)for(let b=0;b<=X2M;b++)if(factible(a,b)){ENT.push([a,b]);if(!OPTI||Z(a,b)>Z(OPTI[0],OPTI[1]))OPTI=[a,b]}
+window.MG_DATOS={vertices:V,optimo:OPT,zOptimo:Z(OPT[0],OPT[1]),optimoEntero:OPTI,zEntero:Z(OPTI[0],OPTI[1])};
+const svg=document.getElementById('mg-svg'),panel=document.getElementById('mg-panel'),chk=document.getElementById('mg-int');
+let pt=null;
+function legend(){document.getElementById('mg-lg').innerHTML=R.map(r=>`<span><svg width="24" height="8" aria-hidden="true"><line x1="0" y1="4" x2="24" y2="4" stroke="${col(r)}" stroke-width="2.5" stroke-dasharray="${r.dash}"/></svg>${r.n}</span>`).join('')+`<span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" style="fill:var(--text-primary)"/></svg>Óptimo continuo</span>`+(chk.checked?`<span><svg width="12" height="12" aria-hidden="true"><rect x="1" y="1" width="10" height="10" fill="#6250d6"/></svg>Óptimo entero</span>`:'')}
+function linea(a,b,c){const ps=[];const add=(x,y)=>{if(x>=-EPS&&x<=X1M+EPS&&y>=-EPS&&y<=X2M+EPS)ps.push([x,y])};
+ if(Math.abs(b)>EPS){add(0,c/b);add(X1M,(c-a*X1M)/b)}if(Math.abs(a)>EPS){add(c/a,0);add((c-b*X2M)/a,X2M)}
+ ps.sort((p,q)=>p[0]-q[0]||p[1]-q[1]);return ps.length>=2?[ps[0],ps[ps.length-1]]:null}
+function draw(){
+ const grid=dark()?'#2c2c2a':'#e1e0d9';let s='';
+ for(let v=0;v<=X1M;v+=5)s+=`<line x1="${sx(v)}" x2="${sx(v)}" y1="${P.t}" y2="${P.b}" stroke="${grid}"/><text x="${sx(v)}" y="${P.b+16}" text-anchor="middle" style="font-size:11px;fill:var(--text-muted)">${v}</text>`;
+ for(let v=0;v<=40;v+=5)s+=`<line y1="${sy(v)}" y2="${sy(v)}" x1="${P.l}" x2="${P.r}" stroke="${grid}"/><text x="${P.l-8}" y="${sy(v)+4}" text-anchor="end" style="font-size:11px;fill:var(--text-muted)">${v}</text>`;
+ s+=`<line x1="${P.l}" y1="${P.b}" x2="${P.r}" y2="${P.b}" style="stroke:var(--text-muted)"/><line x1="${P.l}" y1="${P.b}" x2="${P.l}" y2="${P.t}" style="stroke:var(--text-muted)"/>`;
+ s+=`<text x="${(P.l+P.r)/2}" y="${P.b+36}" text-anchor="middle" style="font-size:12px;fill:var(--text-secondary)">x₁ = solicitudes Estándar por día</text><text transform="translate(16,${(P.t+P.b)/2}) rotate(-90)" text-anchor="middle" style="font-size:12px;fill:var(--text-secondary)">x₂ = solicitudes Prioritarias por día</text>`;
+ s+=`<polygon points="${V.map(v=>sx(v[0])+','+sy(v[1])).join(' ')}" fill="#6250d6" fill-opacity="0.13"/>`;
+ if(chk.checked)for(const[a,b]of ENT)s+=`<circle cx="${sx(a)}" cy="${sy(b)}" r="2" style="fill:var(--text-muted)"/>`;
+ for(const r of R){const l=linea(r.a,r.b,r.cap);if(l)s+=`<line x1="${sx(l[0][0])}" y1="${sy(l[0][1])}" x2="${sx(l[1][0])}" y2="${sy(l[1][1])}" stroke="${col(r)}" stroke-width="2.5" stroke-dasharray="${r.dash}"/>`}
+ if(pt){const z=Z(pt[0],pt[1]),l=linea(C.x1,C.x2,z),ok=factible(pt[0],pt[1]),c=ok?'var(--mg-ok)':'var(--mg-bad)';
+  if(l&&z>0)s+=`<line x1="${sx(l[0][0])}" y1="${sy(l[0][1])}" x2="${sx(l[1][0])}" y2="${sy(l[1][1])}" style="stroke:var(--text-secondary)" stroke-width="1.3" stroke-dasharray="5 4"/>`;
+  s+=`<line x1="${sx(pt[0])}" y1="${sy(pt[1])}" x2="${sx(pt[0])}" y2="${P.b}" style="stroke:${c}" stroke-dasharray="2 3"/><line x1="${sx(pt[0])}" y1="${sy(pt[1])}" x2="${P.l}" y2="${sy(pt[1])}" style="stroke:${c}" stroke-dasharray="2 3"/>`;
+  s+=`<text x="${sx(pt[0])}" y="${P.b-6}" text-anchor="middle" style="font-size:11px;font-weight:500;fill:${c}">${nf(pt[0],chk.checked?0:1)}</text><text x="${P.l+6}" y="${sy(pt[1])-5}" style="font-size:11px;font-weight:500;fill:${c}">${nf(pt[1],chk.checked?0:1)}</text>`}
+ s+=`<circle cx="${sx(OPT[0])}" cy="${sy(OPT[1])}" r="7" style="fill:var(--text-primary);stroke:var(--surface-2)" stroke-width="2.5"/><text x="${sx(OPT[0])+12}" y="${sy(OPT[1])-8}" style="font-size:12px;font-weight:500;fill:var(--text-primary)">Óptimo continuo (${nf(OPT[0],2,2)}; ${nf(OPT[1],2,2)})</text>`;
+ if(chk.checked)s+=`<rect x="${sx(OPTI[0])-6}" y="${sy(OPTI[1])-6}" width="12" height="12" fill="#6250d6" style="stroke:var(--surface-2)" stroke-width="2"/><text x="${sx(OPTI[0])-12}" y="${sy(OPTI[1])+22}" text-anchor="end" style="font-size:12px;font-weight:500;fill:#6250d6">entero (${OPTI[0]}; ${OPTI[1]})</text>`;
+ if(pt){const ok=factible(pt[0],pt[1]);s+=`<circle cx="${sx(pt[0])}" cy="${sy(pt[1])}" r="7" style="fill:${ok?'var(--mg-ok)':'var(--mg-bad)'};stroke:var(--surface-2)" stroke-width="2.5"/>`}
+ svg.innerHTML=s;
+}
+function info(){
+ const p=pt||OPT,d=chk.checked&&pt?0:(pt?1:2),x1=p[0],x2=p[1],f=v=>nf(v,d,d||2);
+ let h=`<div class="mg-h">Punto (x₁; x₂) = (${f(x1)}; ${f(x2)})${pt?'':' · óptimo continuo'}</div>`;
+ h+=`<div>Z = 280.000 · ${f(x1)} + 210.000 · ${f(x2)} = <b style="font-weight:500">${money(Z(x1,x2))}</b> al día</div>`;
+ const malas=[];
+ for(const r of R){const u=uso(r,x1,x2),dif=r.cap-u,ok=dif>=-EPS;if(!ok)malas.push(`${r.n} (faltan ${nf(-dif,1,2)} h)`);
+  h+=`<div class="mg-row"><span>${r.n}: ${nf(r.a,1,1)} · ${f(x1)} + ${nf(r.b,1,1)} · ${f(x2)} = ${nf(u,1,2)} ${ok?'≤':'&gt;'} ${r.cap}</span><span class="${ok?'mg-ok':'mg-bad'}">${ok?'✓ '+(Math.abs(dif)<1e-6?'justo en el límite':'sobran '+nf(dif,1,2)+' h'):'✗ faltan '+nf(-dif,1,2)+' h'}</span></div>`}
+ h+=malas.length?`<div class="mg-msg bad">No factible: se pasa en ${malas.join(' y en ')}.</div>`:`<div class="mg-msg ok">Punto factible: cumple las tres estaciones.</div>`;
+ panel.innerHTML=h;
+}
+function render(){legend();draw();info()}
+svg.addEventListener('pointermove',e=>{const r=svg.getBoundingClientRect(),k=VW/r.width;let x1=((e.clientX-r.left)*k-P.l)/(P.r-P.l)*X1M,x2=(P.b-(e.clientY-r.top)*k)/(P.b-P.t)*X2M;
+ if(x1<0||x2<0||x1>X1M||x2>X2M)return;
+ if(chk.checked){x1=Math.round(x1);x2=Math.round(x2)}else{x1=Math.round(x1*10)/10;x2=Math.round(x2*10)/10}
+ if(!pt||pt[0]!==x1||pt[1]!==x2){pt=[x1,x2];draw();info()}});
+chk.addEventListener('change',()=>{if(pt&&chk.checked)pt=[Math.round(pt[0]),Math.round(pt[1])];render()});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
+render();
+})();
+</script>
+</div>
+
+</div>
+<footer>Parte del ejercicio <a href="./">Centro de Procesamiento de Servicios</a>. Caso sintético con fines docentes; cifras en pesos colombianos (COP).</footer>
+</main>
+</body>
+</html>
