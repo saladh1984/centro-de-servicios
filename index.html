@@ -576,6 +576,64 @@ Z = 280.000 × 13,39 + 210.000 × 14,05 = $6.700.000 → 6.700.000 − 6.600.000
 Z = 280.000 × 12,5 + 210.000 × 15 = $6.650.000 → 6.650.000 − 6.600.000 = <b>$50.000</b><br><br>
 <span class="k">Análisis con 41 h:</span> ya le sobraban 5,14 h, así que el mejor plan no cambia → Z sigue en $6.600.000 → <b>$0</b>
 </div>
+<h3>¿Qué es, en el fondo, el precio sombra?</h3>
+<p>El precio sombra de una estación es <b>cuánto sube el margen del día si esa estación tiene una hora más</b>, sin cambiar nada más. Se mide en pesos por hora. No es un precio que alguien cobre o pague: es lo que esa hora <i>vale para ti</i> dentro del plan. Por eso se llama "sombra": no aparece en ninguna factura, pero está detrás de cada decisión. (También se le dice valor sombra o precio dual.)</p>
+<ul>
+<li><b>Si la estación tiene horas de sobra, su precio sombra es $0.</b> Una hora más se quedaría sin usar, como agregarle agua a un vaso que ya tiene espacio. Le pasa a Análisis.</li>
+<li><b>Si la estación está llena, su precio sombra es mayor que $0.</b> Esa hora extra permite reacomodar el plan y ganar más. Les pasa a Validación y a Cierre.</li>
+<li><b>Sirve para decidir:</b> si alguien te vende una hora más barata que su precio sombra, puede convenir comprarla; si es más cara, no.</li>
+</ul>
+<p>Hay una segunda forma de encontrarlo, sin volver a resolver el modelo. En el mejor plan, el margen de cada pedido queda <b>repartido exactamente</b> entre las horas que usa en las estaciones llenas. Si y<sub>V</sub> es lo que vale una hora de Validación y y<sub>C</sub> lo que vale una de Cierre:</p>
+<div class="calc">
+<span class="k">Lo que deja un Estándar</span> = lo que valen sus horas en las estaciones llenas: 2,4·y<sub>V</sub> + 0,8·y<sub>C</sub> = 280.000<br>
+<span class="k">Lo que deja un Prioritario</span>: 1,2·y<sub>V</sub> + 1,8·y<sub>C</sub> = 210.000<br>
+Se multiplica la segunda por 2: 2,4·y<sub>V</sub> + 3,6·y<sub>C</sub> = 420.000<br>
+Se le resta la primera: 2,8·y<sub>C</sub> = 140.000 → <b>y<sub>C</sub> = $50.000 por hora de Cierre</b><br>
+Se reemplaza: 2,4·y<sub>V</sub> = 280.000 − 0,8 × 50.000 = 240.000 → <b>y<sub>V</sub> = $100.000 por hora de Validación</b><br><br>
+<span class="k">Comprobación:</span> Estándar 2,4 × 100.000 + 0,8 × 50.000 = 240.000 + 40.000 = $280.000 ✓ · Prioritario 1,2 × 100.000 + 1,8 × 50.000 = 120.000 + 90.000 = $210.000 ✓<br>
+Análisis no entra en estas ecuaciones porque no está llena: su precio sombra es $0.
+</div>
+<p>Las dos formas dan lo mismo: $100.000 por hora de Validación y $50.000 por hora de Cierre.</p>
+
+<h3>¿Hasta cuándo vale? De dónde salen las 8,31 horas de Validación</h3>
+<p>Cuando le das horas a Validación, el mejor plan se va moviendo: atiendes un poco más de Estándar y un poco menos de Prioritarios. Cierre sigue llena todo el tiempo. El problema es que <b>Análisis se va llenando</b>, y cuando se llena, el truco se acaba. Hay que calcular cuándo pasa eso.</p>
+<div class="calc">
+<span class="k">Paso 1 · Cómo se mueve el plan.</span> Con h horas extra en Validación, siguen llenas Validación y Cierre:<br>
+2,4·x₁ + 1,2·x₂ = 48 + h &nbsp;y&nbsp; 0,8·x₁ + 1,8·x₂ = 36<br>
+De Cierre: x₁ = 45 − 2,25·x₂. Reemplazando en Validación: 2,4·(45 − 2,25·x₂) + 1,2·x₂ = 48 + h → 108 − 4,2·x₂ = 48 + h<br>
+→ <b>x₂ = (60 − h) ÷ 4,2</b> &nbsp;y&nbsp; <b>x₁ = 45 − 2,25·x₂</b><br>
+Por cada hora extra de Validación: x₂ baja 1 ÷ 4,2 = 0,238 pedidos y x₁ sube 2,25 ÷ 4,2 = 0,536 pedidos.<br><br>
+<span class="k">Paso 2 · Cuánto se llena Análisis.</span> Horas de Análisis = 1,6·x₁ + 1,0·x₂ = 1,6·(45 − 2,25·x₂) + x₂ = 72 − 2,6·x₂<br>
+Con h = 0: 72 − 2,6 × 14,29 = 34,86 h → le sobran 40 − 34,86 = <b>5,14 h</b><br>
+Cada hora extra de Validación baja x₂ en 0,238, así que Análisis gasta 2,6 × 0,238 = <b>0,619 h más</b> por cada hora extra.<br><br>
+<span class="k">Paso 3 · Cuándo se llena.</span> 5,14 h libres ÷ 0,619 h por hora extra = <b>8,31 horas</b><br>
+En ese punto: x₂ = (60 − 8,31) ÷ 4,2 = 12,31 y x₁ = 45 − 2,25 × 12,31 = 17,31 → Análisis 1,6 × 17,31 + 12,31 = 40 h: llena.<br>
+Validación queda en 48 + 8,31 = <b>56,31 h</b>, el límite superior del rango.
+</div>
+<p><b>Atajo para comprobarlo:</b> el punto donde termina el rango es el cruce de Análisis con Cierre, (17,31; 12,31), que calculamos en la sección 3. Ese plan necesita 2,4 × 17,31 + 1,2 × 12,31 = 56,31 h de Validación, o sea 56,31 − 48 = 8,31 h extra.</p>
+<p>¿Y si en vez de agregar <b>quitas</b> horas a Validación? Entonces x₂ sube y x₁ baja, hasta que ya no queda ningún Estándar (x₁ = 0, x₂ = 20). Eso pasa cuando Validación tiene 1,2 × 20 = <b>24 h</b>. Entre 24 y 56,31 h, cada hora de Validación vale $100.000.</p>
+
+<h3>Y en Cierre: de dónde salen las 36 horas</h3>
+<p>Con Cierre pasa lo contrario: al darle horas, el plan atiende más Prioritarios y menos Estándar, y es Validación la que sigue llena.</p>
+<div class="calc">
+<span class="k">Paso 1 · Cómo se mueve el plan.</span> Con h horas extra en Cierre: 2,4·x₁ + 1,2·x₂ = 48 &nbsp;y&nbsp; 0,8·x₁ + 1,8·x₂ = 36 + h<br>
+De Validación: x₁ = 20 − 0,5·x₂. Reemplazando en Cierre: 0,8·(20 − 0,5·x₂) + 1,8·x₂ = 36 + h → 16 + 1,4·x₂ = 36 + h<br>
+→ <b>x₂ = (20 + h) ÷ 1,4</b> &nbsp;y&nbsp; <b>x₁ = 20 − 0,5·x₂</b><br>
+Por cada hora extra de Cierre: x₂ sube 1 ÷ 1,4 = 0,714 pedidos y x₁ baja 0,5 ÷ 1,4 = 0,357 pedidos.<br><br>
+<span class="k">Paso 2 · Qué se acaba primero.</span> Aquí hay dos candidatos:<br>
+• Los Estándar se acaban (x₁ = 0) cuando x₂ = 40 → 20 + h = 1,4 × 40 = 56 → <b>h = 36</b><br>
+• Análisis: 1,6·x₁ + x₂ = 1,6·(20 − 0,5·x₂) + x₂ = 32 + 0,2·x₂ → sube 0,2 × 0,714 = 0,143 h por hora extra → 5,14 ÷ 0,143 = <b>36</b><br>
+Los dos pasan justo en h = 36, en el punto (0; 40), que es el cruce de Análisis con Validación de la sección 3.<br><br>
+<span class="k">Paso 3 · El rango.</span> Cierre puede llegar hasta 36 + 36 = <b>72 h</b> manteniendo su valor de $50.000 por hora.<br>
+Hacia abajo, al quitarle horas, los Prioritarios se acaban (x₂ = 0, x₁ = 20) cuando Cierre tiene 0,8 × 20 = <b>16 h</b>.
+</div>
+<div class="tw"><table>
+<tr><th>Estación</th><th>Precio sombra</th><th>Por qué se acaba</th><th>Rango de validez</th></tr>
+<tr><td>Análisis</td><td>$0</td><td>Tiene horas de sobra; solo cambiaría si bajara de lo que usa</td><td>34,86 h en adelante</td></tr>
+<tr><td>Validación</td><td>$100.000/h</td><td>Arriba: se llena Análisis. Abajo: se acaban los Estándar</td><td>24,00 a 56,31 h (−24 a +8,31 h)</td></tr>
+<tr><td>Cierre</td><td>$50.000/h</td><td>Arriba: se acaban los Estándar y se llena Análisis. Abajo: se acaban los Prioritarios</td><td>16,00 a 72,00 h (−20 a +36 h)</td></tr>
+</table></div>
+<p>En el simulador de abajo puedes verlo en vivo: elige Validación, sube a 8,3 h y mira cómo Análisis llega a 40 h en la línea "Horas usadas".</p>
 <h3>Simulador: dale horas extra a una estación</h3>
 <div class="sim" id="s5">
 <div class="sim-seg" id="s5-st" role="group" aria-label="Estación">
@@ -702,6 +760,7 @@ function r5(){
  else c+=`El mejor plan queda en x₁ = ${nf2(p.x1)}; x₂ = ${nf2(p.x2)} (estaciones llenas: ${lista(full)||'ninguna'}).<br>`;
  c+=`Z = 280.000 × ${nf2(p.x1)} + 210.000 × ${nf2(p.x2)} = ${$m(p.z)} → ${$m(p.z)} − $6.600.000 = <b>${$m(dz)}</b>`;
  if(h>0)c+=` &nbsp;(en promedio ${$m(dz/h)} por hora)`;
+ c+=`<br><span class="k">Horas usadas:</span> `+ST.map((t,i)=>{const u=t.a*p.x1+t.b*p.x2,lleno=Math.abs(u-kk[i])<0.01;return `${t.n} ${nf2(u)} de ${nf(kk[i],2)} h${lleno?' (llena)':''}`}).join(' · ');
  $('s5-calc').innerHTML=c;
  const W=[];const v0=val(s5,0),end0=segEnd(s5,0);
  if(v0<1){W.push(`${st.n} tiene horas de sobra (le sobran ${nf2(st.cap-(st.a*12.857142857+st.b*14.285714286))} h en el plan actual). Darle más horas no cambia el plan: cada hora extra vale $0. Invertir aquí sería botar la plata.`);
